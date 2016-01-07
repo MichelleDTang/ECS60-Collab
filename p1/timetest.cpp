@@ -12,6 +12,7 @@
 #include"QueueAr.h"
 #include"StackLi.h"
 #include"SkipList.h"
+#include"CPUTimer.h"
 
 using namespace std;
 
@@ -40,11 +41,11 @@ void RunList(char * filename)
 	ifstream read(filename);
 	while (read >> command >> num)
 	{
-		if (command = 'i')
+		if (command == 'i')
 		{
 
 		}
-		if (command = 'd')
+		if (command == 'd')
 		{
 			
 		}
@@ -55,16 +56,18 @@ void RunCursorList(char * filename)
 {
 	char command;
 	int num;
+	CursorList<int> object(cursorSpace);
+	CursorListItr<int> cursItr = object.zeroth();
 	ifstream read(filename);
 	while (read >> command >> num)
 	{
-		if (command = 'i')
+		if (command == 'i')
 		{
-			
+			object.insert(num, cursItr)
 		}
-		if (command = 'd')
+		if (command == 'd')
 		{
-			
+			object.remove(num);
 		}
 	}	
 }
@@ -74,15 +77,16 @@ void RunStackAr(char * filename)
 	char command;
 	int num;
 	ifstream read(filename);
+	StackAr<int> object;
 	while (read >> command >> num)
 	{
-		if (command = 'i')
+		if (command == 'i')
 		{
-		
+			object.push(num);	
 		}
-		if (command = 'd')
+		if (command == 'd')
 		{
-			
+			object.pop();	
 		}
 	}	
 }
@@ -91,16 +95,17 @@ void RunStackLi(char * filename)
 {
 	char command;
 	int num;
+	StackLi<int> object;
 	ifstream read(filename);	
 	while (read >> command >> num)
 	{
-		if (command = 'i')
+		if (command == 'i')
 		{
-
+			object.push(num);
 		}
-		if (command = 'd')
+		if (command == 'd')
 		{
-	
+			object.pop();
 		}	
 	}
 }
@@ -109,16 +114,17 @@ void RunQueueAr(char * filename)
 {
 	char command;
 	int num;
+	QueueAr<int> object;
 	ifstream read(filename);	
 	while (read >> command >> num)
 	{
-		if (command = 'i')
+		if (command == 'i')
 		{
-
+			object.enqueue(num);
 		}
-		if (command = 'd')
+		if (command == 'd')
 		{
-			
+			object.dequeue();
 		}
 	}
 }
@@ -130,11 +136,11 @@ void RunSkipList(char * filename)
 	ifstream read(filename);
 	while (read >> command >> num);
 	{
-		if (command = 'i')
+		if (command == 'i')
 		{
 
 		}
-		if (command = 'd')
+		if (command == 'd')
 		{
 
 		}
@@ -149,7 +155,7 @@ int main()
 	
 	do
 	{
-		CPUTime ct;
+		CPUTimer ct;
 		choice = getChoice();
 		ct.reset();
 		switch (choice)
