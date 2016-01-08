@@ -16,11 +16,11 @@
 
 using namespace std;
 
-vector<CursorNode <int> cursorSpace(500000);
+vector<CursorNode <int> > cursorSpace(500000);
 
-int getChoice(void)
+int getChoice()
 {
-	int i;
+	int choose;
 	cout << "      ADT Menu" << endl;
 	cout << "0. Quit" << endl;
 	cout << "1. LinkedList" << endl;
@@ -29,25 +29,28 @@ int getChoice(void)
 	cout << "4. StackLi" << endl;
 	cout << "5. QueueAr" << endl;
 	cout << "6. SkipList" << endl;
-	cin >> i;	
-
-	return i;
+	cout << "Your choice >> ";
+	cin >> choose;	
+		
+	return choose;
 }
 
 void RunList(char * filename)
 {
 	char command;
 	int num;
+	List<int> list;
+	ListItr<int> listItr = list.zeroth();
 	ifstream read(filename);
 	while (read >> command >> num)
 	{
 		if (command == 'i')
 		{
-
+			list.insert(num, listItr);
 		}
 		if (command == 'd')
 		{
-			
+			list.remove(num);	
 		}
 	}	
 }
@@ -63,7 +66,7 @@ void RunCursorList(char * filename)
 	{
 		if (command == 'i')
 		{
-			object.insert(num, cursItr)
+			object.insert(num, cursItr);
 		}
 		if (command == 'd')
 		{
@@ -77,7 +80,7 @@ void RunStackAr(char * filename)
 	char command;
 	int num;
 	ifstream read(filename);
-	StackAr<int> object;
+	StackAr<int> object(500000);
 	while (read >> command >> num)
 	{
 		if (command == 'i')
@@ -114,7 +117,7 @@ void RunQueueAr(char * filename)
 {
 	char command;
 	int num;
-	QueueAr<int> object;
+	Queue<int> object(500000);
 	ifstream read(filename);	
 	while (read >> command >> num)
 	{
@@ -133,43 +136,48 @@ void RunSkipList(char * filename)
 {
 	char command;
 	int num;
+	SkipList<int> object(0 , 1000000 );
 	ifstream read(filename);
 	while (read >> command >> num);
 	{
 		if (command == 'i')
 		{
-
+			object.insert(num);
 		}
 		if (command == 'd')
 		{
-
+			object.deleteNode(num);
 		}
 	}	
 }
 
 int main()
-{
-	char argv[1];	
+
+{	
+	char a[1000];	
 	cout << "Filename >> ";
-	cin >> argv[1];
-	
+	cin >> a;
+
+	int choice;
+	CPUTimer ct;	
+
 	do
 	{
-		CPUTimer ct;
+		cout << endl;
 		choice = getChoice();
 		ct.reset();
 		switch (choice)
 		{
-			case 1: RunList(argv[1]); break;
-			case 2: RunCursorList(argv[1]); break;
-			case 3:	RunStackAr(argv[1]); break;
-			case 4:	RunStackLi(argv[1]); break;
-			case 5:	RunQueueAr(argv[1]); break;
-			case 6:	RunSkipList(argv[1]); break;
-		}
+			case 1: RunList(&a[1]); break;
+			case 2: RunCursorList(&a[1]); break;
+			case 3:	RunStackAr(&a[1]); break;
+			case 4:	RunStackLi(&a[1]); break;
+			case 5:	RunQueueAr(&a[1]); break;
+			case 6:	RunSkipList(&a[1]); break;
+		 }
 
-		cout << "CPU time: " << ct.cur_CPUTime() << endl;
-	}	
+		cout << "CPU time: " << ct.cur_CPUTime() << endl ;
+	} while(choice > 0);	
 
 } 
 
