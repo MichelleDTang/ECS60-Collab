@@ -34,7 +34,7 @@ protected:
   void choosePowers();
   int  chooseLevel();
 public:
-  SkipList(const T &el, int MaxSize);
+  SkipList(const T &el, int MaxSize = 16);
   ~SkipList();
   T& find(const T&); // Will return ITEM_NOT_FOUND if list is empty.
   bool isEmpty(){return root[0] == NULL;}

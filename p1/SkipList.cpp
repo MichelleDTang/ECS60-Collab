@@ -44,6 +44,8 @@ int SkipList<T>::chooseLevel()
     int i, r = (rand() * 32767) % powers[maxLevel-1] + 1;
       // RAND_MAX is 32767 so * 32767 < MAX_INT with 4 byte ints
    
+    if(r > 32769)
+      r = r;
     for (i = 1; i < maxLevel; i++)
         if (r < powers[i])
             return i - 1; // return a level < the highest level;
