@@ -13,6 +13,7 @@
 #include"StackLi.h"
 #include"SkipList.h"
 #include"CPUTimer.h"
+#include<string>
 
 using namespace std;
 
@@ -42,6 +43,8 @@ void RunList(char * filename)
 	List<int> list;
 	ListItr<int> listItr = list.zeroth();
 	ifstream read(filename);
+	string first;
+	getline(read, first);
 	while (read >> command >> num)
 	{
 		if (command == 'i')
@@ -62,6 +65,8 @@ void RunCursorList(char * filename)
 	CursorList<int> object(cursorSpace);
 	CursorListItr<int> cursItr = object.zeroth();
 	ifstream read(filename);
+	string first;
+	getline(read, first);
 	while (read >> command >> num)
 	{
 		if (command == 'i')
@@ -81,6 +86,8 @@ void RunStackAr(char * filename)
 	int num;
 	ifstream read(filename);
 	StackAr<int> object(500000);
+	string first;
+	getline(read, first);
 	while (read >> command >> num)
 	{
 		if (command == 'i')
@@ -100,6 +107,8 @@ void RunStackLi(char * filename)
 	int num;
 	StackLi<int> object;
 	ifstream read(filename);	
+	string first;
+	getline(read, first);
 	while (read >> command >> num)
 	{
 		if (command == 'i')
@@ -118,7 +127,9 @@ void RunQueueAr(char * filename)
 	char command;
 	int num;
 	Queue<int> object(500000);
+	string first;
 	ifstream read(filename);	
+	getline(read, first);
 	while (read >> command >> num)
 	{
 		if (command == 'i')
@@ -138,6 +149,8 @@ void RunSkipList(char * filename)
 	int num;
 	SkipList<int> object(0 , 1000000 );
 	ifstream read(filename);
+	string first;
+	getline(read, first);
 	while (read >> command >> num);
 	{
 		if (command == 'i')
@@ -157,7 +170,7 @@ int main()
 	char a[1000];	
 	cout << "Filename >> ";
 	cin >> a;
-
+	
 	int choice;
 	CPUTimer ct;	
 
