@@ -1,7 +1,6 @@
 // Michelle Tang
-//912026295
+// 912026295
 //
-//need container for waiting, seated, and move out
 
 #include<iostream>
 #include<fstream>
@@ -15,111 +14,146 @@ class Row
   public:
 	int time = 0;
 
-	typedef enum{A, B, C, D, E, F} letters;
+	Queue<char> wait(1);
 
-	StackAr<letters> lseated(144);
+	Stack<char> ABC(3);
 
-	StackAr<int> lseatedr(144);
+	Stack<char> DEF(3);
 
-	StackAr<letters> rseated(144);
+	Stack<char> temp(3);
 
-	StackAr<int> rseatedr(144);
-
-// holds and keeps track of the passengers
-
-	QueueAr<int> raisle(288);
-
-	QueueAr<letters> saisle(288);
-
-// fill in containers with all passengers
-	Row(line)
-	{
-		int row;
-		char seat;
-		while(line >> row >> seat)
-		{
-			raisle.enqueue(row);
-			saisle.enqueue(seat);
-		}
-	}	
+	typedef enum State {W,ST1,ST2,S,O,I};
 	
-//waiting, seated, and out
-//seat the first passenger
-	//left
-	if (saisle.getFront() == 'A' || saisle.getFront() == 'B' || 
-		saisle.getFront() =='C')	
+	Row (char letter)
 	{
-
-		//must wait in each row for 5 seconds
-		for (int r=1 ; r <= raisle.getFront() ; r++)
+		State state = W;
+		while(true)
 		{
-			time = time + 5;
-		}
-		
-		//luggage
-		time = time + 10;
-		//passenger now seated
-		lseated.push(saisle.getFront());
-		lseatedr.push(raisle.getFront());
-		
-		saisle.dequeue();
-		raisle.dequeue();
-		
-	}
-	//right
-	else
-	{
-		
-		for (int r=1 ; r <= raisle.getFront() ; r++)
-		{
-			time = time + 5	
-		}
+			switch(state)
+			{
+				case W : time += 5; 
+					if ( ) //check that it's the correct row) 
+					{
+						state = ST1;
+						break;
+					}
+					else
+					{
+						return false;
+					}
+				case ST1 : time += 5; state = ST2; break;
+				case ST2 : time += 5; 
+					if ( ) // if the stack needs to be popped
+					{
+						state = O;
+						break;
+					}
+					else
+					{
+						state = S; 
+						break;
+					}
+				case S : time += 5; 
+					if (letter == 'A' || letter == 'B' || letter == 'C')
+					{
+						ABC.push(letter);
+					}	
+					else
+					{
+						DEF.push(letter);
+					}
+					if
 
-		time = time + 10;
-
-		rseated.push(saisle.getFront());
-		rseatedr.push(raisle.getFront());
-		
-		saisle.dequeue();
-		raisle.dequeue();
-		
+						return false;
+				case O : time += 10; state = I; break;
+				case I : time += 5; return false;
+			}
+		}
 	}
 
-//start seating everyone else
-	
-	//go through every remaining passenger
-	// compare first in queue to top of stack
-
-	for (int i = 1 ; i < 288; i++)
-	{
-		//if front guy is D and second guy's row is bigger
-
-		//if front guy is D and second guy's row is smaller
-
-		//simultaneous seating
-		
-		//someone is closer to aisle
-
-			 
-		
-
-	}  		
-
-
-	return time;
 }
 
-int main(int argc, char * argv[1])
+
+int main(argc, char * argv[])
 {
-	ifstream seats(argv[1]);			
-
+	Queue<int> passrows(288);
 	
+	Queue<char> passseats(288);
+
+	int row;
+
+	char seat;
+
+	ifstream inf(argv[1]);
+
+	Queue<int> p(48);	
+
+	for (int pt=1; pt <= 48; pt++)
+	{
+		p.enqueue(new Row)
+	}		
+
+	while (!inf.eof())
+	{
+		if(inf=="/n")
+		{
+			while(inf >> row >> seat)
+			{
+			
+				passrows.enqueue(row);
+
+				passseats.enqueue(seat);			
+
+			}
+
+			while (!passrows.isEmpty())
+			{	
+				int front = passrows.getFront();
+				for (int match=1; match <=48; match++)
+				{
+					if ( front == match)
+					{
+						p.getFront();
+						break;
+					}
+					else
+					{
+						p.getFront() ++ ;
+					}
+					
+				}
+
+			}
+		}
+		
+		
+		
+	}
 
 
-	Row strat1(line), strat2(line), strat3(line);
-
-	cout << "Back to front: " << strat1(seats.getline()) << endl;
-	cout << "Random: " << strat2(seats.getline()) << endl;
-	cout << "Outside in:" << strat3(seats.getline()) << endl;
+// check the status of the person in the row
+/*	switch(state)
+	{
+		case W : time += 5; 
+			if ( ) //check that it's the correct row) 
+			{
+				state = ST1;
+				break;
+			}
+			else
+			{
+				return false;
+			}
+		case ST1 : time += 5; state = ST2; break;
+		case ST2 : time += 5; state = S; break;
+		case S : time += 5; return false;
+		case O : time += 5; state = I; break;
+		case I : time += 5; return false;
+	}
+*/
+//
+//	cout << "Back to front: " <<
+//	cout << "Random: " <<
+//	cout << "Outside in: " << 
 
 }

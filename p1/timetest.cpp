@@ -1,5 +1,5 @@
 // Michelle Tang
-// 912026295
+// Christina Hardiman 
 // Driver program that asks for a filename and repeatedly asks the user for the ADT to which he/she wishes to apply the ammands from the specified file.
 
 #include<iostream>
@@ -35,46 +35,42 @@ int getChoice()
 		
 	return choose;
 }
-
 void RunList(char * filename)
 {
-	char command, toss[1000];
+	char command, first[512];
 	int num;
-	List<int> list;
-	ListItr<int> listItr = list.zeroth();
+	List <int> list;
+	ListItr <int> listItr = list.zeroth();
 	ifstream read(filename);
-	string first;
-	read.getline(toss, 1000);
-	cout<< first;
+	read.getline(first,512);
 	while (read >> command >> num)
 	{
 		if (command == 'i')
 		{
 			list.insert(num, listItr);
 		}
-		else
+		else	
 		{
 			list.remove(num);	
 		}
 	}	
 }
-
+// is erroring with accessing outside array with testhw
 void RunCursorList(char * filename)
 {
-	char command;
+	char command, first[512];
 	int num;
 	CursorList<int> object(cursorSpace);
 	CursorListItr<int> cursItr = object.zeroth();
 	ifstream read(filename);
-	string first;
-	getline(read, first);
+        read.getline(first,512);	
 	while (read >> command >> num)
 	{
 		if (command == 'i')
 		{
 			object.insert(num, cursItr);
 		}
-		else
+		if (command == 'd')
 		{
 			object.remove(num);
 		}
@@ -83,19 +79,18 @@ void RunCursorList(char * filename)
 
 void RunStackAr(char * filename)
 {
-	char command;
+	char command, first[512];
 	int num;
 	ifstream read(filename);
 	StackAr<int> object(500000);
-	string first;
-	getline(read, first);
+	read.getline(first,512);	
 	while (read >> command >> num)
 	{
 		if (command == 'i')
 		{
 			object.push(num);	
 		}
-		else
+		if (command == 'd')
 		{
 			object.pop();	
 		}
@@ -104,19 +99,18 @@ void RunStackAr(char * filename)
 
 void RunStackLi(char * filename)
 {
-	char command;
+	char command, first[512];
 	int num;
 	StackLi<int> object;
 	ifstream read(filename);	
-	string first;
-	getline(read, first);
+	read.getline(first,512);
 	while (read >> command >> num)
 	{
 		if (command == 'i')
 		{
 			object.push(num);
 		}
-		else
+		if (command == 'd')
 		{
 			object.pop();
 		}	
@@ -125,19 +119,18 @@ void RunStackLi(char * filename)
 
 void RunQueueAr(char * filename)
 {
-	char command;
+	char command, first[512];
 	int num;
 	Queue<int> object(500000);
-	string first;
 	ifstream read(filename);	
-	getline(read, first);
+	read.getline(first,512);
 	while (read >> command >> num)
 	{
 		if (command == 'i')
 		{
 			object.enqueue(num);
 		}
-		else
+		if (command == 'd')
 		{
 			object.dequeue();
 		}
@@ -146,19 +139,18 @@ void RunQueueAr(char * filename)
 
 void RunSkipList(char * filename)
 {
-	char command;
+	char command, first[512];
 	int num;
 	SkipList<int> object(0 , 1000000 );
 	ifstream read(filename);
-	string first;
-	getline(read, first);
+	read.getline(first,512);
 	while (read >> command >> num);
 	{
 		if (command == 'i')
 		{
 			object.insert(num);
 		}
-		else
+		if (command == 'd')
 		{
 			object.deleteNode(num);
 		}
@@ -182,12 +174,12 @@ int main()
 		ct.reset();
 		switch (choice)
 		{
-			case 1: RunList(&a[1]); break;
-			case 2: RunCursorList(&a[1]); break;
-			case 3:	RunStackAr(&a[1]); break;
-			case 4:	RunStackLi(&a[1]); break;
-			case 5:	RunQueueAr(&a[1]); break;
-			case 6:	RunSkipList(&a[1]); break;
+			case 1: RunList(a); break;
+			case 2: RunCursorList(a); break;
+			case 3:	RunStackAr(a); break;
+			case 4:	RunStackLi(a); break;
+			case 5:	RunQueueAr(a); break;
+			case 6:	RunSkipList(a); break;
 		 }
 
 		cout << "CPU time: " << ct.cur_CPUTime() << endl ;
