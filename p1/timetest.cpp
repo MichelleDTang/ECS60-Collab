@@ -38,20 +38,21 @@ int getChoice()
 
 void RunList(char * filename)
 {
-	char command;
+	char command, toss[1000];
 	int num;
 	List<int> list;
 	ListItr<int> listItr = list.zeroth();
 	ifstream read(filename);
 	string first;
-	getline(read, first);
+	read.getline(toss, 1000);
+	cout<< first;
 	while (read >> command >> num)
 	{
 		if (command == 'i')
 		{
 			list.insert(num, listItr);
 		}
-		if (command == 'd')
+		else
 		{
 			list.remove(num);	
 		}
@@ -73,7 +74,7 @@ void RunCursorList(char * filename)
 		{
 			object.insert(num, cursItr);
 		}
-		if (command == 'd')
+		else
 		{
 			object.remove(num);
 		}
@@ -94,7 +95,7 @@ void RunStackAr(char * filename)
 		{
 			object.push(num);	
 		}
-		if (command == 'd')
+		else
 		{
 			object.pop();	
 		}
@@ -115,7 +116,7 @@ void RunStackLi(char * filename)
 		{
 			object.push(num);
 		}
-		if (command == 'd')
+		else
 		{
 			object.pop();
 		}	
@@ -136,7 +137,7 @@ void RunQueueAr(char * filename)
 		{
 			object.enqueue(num);
 		}
-		if (command == 'd')
+		else
 		{
 			object.dequeue();
 		}
@@ -157,7 +158,7 @@ void RunSkipList(char * filename)
 		{
 			object.insert(num);
 		}
-		if (command == 'd')
+		else
 		{
 			object.deleteNode(num);
 		}
