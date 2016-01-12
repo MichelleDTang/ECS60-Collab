@@ -42,6 +42,6 @@ Not OK, CPU time outside acceptable range
 0
 
 boarding.cpp:
-boarding.cpp does not compile!
+boarding.cpp not found.
 Timetest score: -1  Boarding score: 0
 Total: -1 out of 25.
