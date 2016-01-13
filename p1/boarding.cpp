@@ -43,30 +43,186 @@ class Row
 					}
 				case ST1 : time += 5; state = ST2; break;
 				case ST2 : time += 5; 
-					if ( ) // if the stack needs to be popped
+					if (letter == 'A' ) // if the stack needs to be popped
 					{
-						state = O;
+						if (!ABC.isEmpty())
+						{						
+							state = O;
+							break;
+						}
+						else
+						{
+							state = S;
+							break;
+						}								
+
+					}
+					else if (letter == 'F')
+					{
+						if (!DEF.isEmpty())
+						{
+							state = O;
+							break;
+						}
+						else
+						{
+							state = S;
+							break;
+						}
+	
+					}
+					else if (letter == 'B')
+					{
+						if (!ABC.isEmpty())
+						{
+							if (ABC.top() == 'C')
+							{
+								state = O;
+								break;
+							}
+							else
+							{
+								state = S;
+								break;
+							}
+						}
+						else
+						{
+							state = S; 
+							break;
+						}
+					}
+					else if (letter == 'E')
+					{
+						if (!DEF.isEmpty())
+						{
+							if (DEF.top() == 'D')
+							{
+								state = O;
+								break;
+							}
+						}
+						else
+						{
+							state = S;
+							break;
+						}
+					}
+					else //C or D
+					{
+						state = S;
 						break;
 					}
-					else
-					{
-						state = S; 
-						break;
-					}
-				case S : time += 5; 
+
+				case S :  
 					if (letter == 'A' || letter == 'B' || letter == 'C')
 					{
 						ABC.push(letter);
+						time += 5;
+						if (!temp.isEmpty())
+						{
+							state = I;
+							break;
+						}
+						else
+						{
+							return false;
+						}
+
 					}	
 					else
 					{
 						DEF.push(letter);
-					}
-					if
+						time += 5;
+						if (!temp.isEmpty())
+						{
+							state = I;
+							break;
 
-						return false;
-				case O : time += 10; state = I; break;
-				case I : time += 5; return false;
+						}
+						else
+						{					
+							return false;
+						}
+				case O : 
+					if (letter == 'A' || letter == 'B')
+					{
+						if (letter == 'A')
+						{						
+							if (ABC.top() == 'C')
+							{
+								temp.push(ABC.topAndPop);
+								time += 5;
+								if (!ABC.isEmpty())
+								{
+									temp.push(ABC.topAndPop);
+									time += 5;
+									state = S;
+									break;
+								}
+								else
+								{
+									state = S;
+									break;
+								}
+							}
+						}
+						else
+						{
+							temp.push(ABC.topAndPop);
+							time += 5;
+							break;
+						}
+					}
+					else
+					{
+						if (letter == 'F')
+						{						
+							if (ABC.top() == 'D')
+							{
+								temp.push(DEF.topAndPop);
+								time += 5;
+								if (!DEF.isEmpty())
+								{
+									temp.push(DEF.topAndPop);
+									time += 5;
+									state = S;
+									break;
+								}
+								else
+								{
+									state = S;
+									break;
+								}
+							}
+						}
+						else
+						{
+							temp.push(DEF.topAndPop);
+							time += 5;
+							break;
+						}
+						
+						
+					}
+
+				case I : 
+					while (!temp.isEmpty())
+					{
+						if (letter == 'A'|| letter == 'B' || letter 'C')
+						{
+							ABC.push(temp.topAndPop);
+							time += 5;
+						}
+						else
+						{
+							DEF.push(temp.topAndPop);
+							time += 5;
+						}
+						
+					}
+					return false;
+
 			}
 		}
 	}
