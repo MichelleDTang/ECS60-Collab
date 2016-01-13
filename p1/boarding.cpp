@@ -9,35 +9,48 @@
 
 using namespace std;
 
+
 class Row
 {
   public:
-	int time = 0, checkr;
+	
+	int checkr, seconds;
 
-	Queue<char> wait(1);
+	enum State {W,ST1,ST2,S,O,I};
 
-	Stack<char> ABC(3);
+	Queue<char> wait;
 
-	Stack<char> DEF(3);
+	StackAr<char> ABC;
 
-	Stack<char> temp(3);
+	StackAr<char> DEF;
 
-	typedef enum State {W,ST1,ST2,S,O,I};
+	StackAr<char> temp;
+	
 	
 	Row (int rownum)
 	{
 		checkr = rownum;
+
+		Queue<char> wait(1);
+
+		StackAr<char> ABC(3);
+
+		StackAr<char> DEF(3);
+
+		StackAr<char> temp(3);
+	
 	}
 
 
-	Sit (char letter, int row)
+	int Sit (char letter, int row, int seconds)
 	{
+
 		State state = W;
 		while(true)
 		{
 			switch(state)
 			{
-				case W : time += 5; 
+				case W : seconds += 5; 
 					if (row == checkr) //check that it's the correct row
 					{
 					
@@ -48,8 +61,8 @@ class Row
 					{
 						return false;
 					}
-				case ST1 : time += 5; state = ST2; break;
-				case ST2 : time += 5; 
+				case ST1 : seconds += 5; state = ST2; break;
+				case ST2 : seconds += 5; 
 					if (letter == 'A' ) // if the stack needs to be popped
 					{
 						if (!ABC.isEmpty())
@@ -125,7 +138,7 @@ class Row
 					if (letter == 'A' || letter == 'B' || letter == 'C')
 					{
 						ABC.push(letter);
-						time += 5;
+						seconds += 5;
 						if (!temp.isEmpty())
 						{
 							state = I;
@@ -140,7 +153,7 @@ class Row
 					else
 					{
 						DEF.push(letter);
-						time += 5;
+						seconds += 5;
 						if (!temp.isEmpty())
 						{
 							state = I;
@@ -151,6 +164,7 @@ class Row
 						{					
 							return false;
 						}
+					}
 				case O : 
 					if (letter == 'A' || letter == 'B')
 					{
@@ -158,12 +172,12 @@ class Row
 						{						
 							if (ABC.top() == 'C')
 							{
-								temp.push(ABC.topAndPop);
-								time += 5;
+								temp.push(ABC.topAndPop());
+								seconds += 5;
 								if (!ABC.isEmpty())
 								{
-									temp.push(ABC.topAndPop);
-									time += 5;
+									temp.push(ABC.topAndPop());
+									seconds += 5;
 									state = S;
 									break;
 								}
@@ -176,8 +190,8 @@ class Row
 						}
 						else
 						{
-							temp.push(ABC.topAndPop);
-							time += 5;
+							temp.push(ABC.topAndPop());
+							seconds += 5;
 							break;
 						}
 					}
@@ -187,12 +201,12 @@ class Row
 						{						
 							if (ABC.top() == 'D')
 							{
-								temp.push(DEF.topAndPop);
-								time += 5;
+								temp.push(DEF.topAndPop());
+								seconds += 5;
 								if (!DEF.isEmpty())
 								{
-									temp.push(DEF.topAndPop);
-									time += 5;
+									temp.push(DEF.topAndPop());
+									seconds += 5;
 									state = S;
 									break;
 								}
@@ -205,8 +219,8 @@ class Row
 						}
 						else
 						{
-							temp.push(DEF.topAndPop);
-							time += 5;
+							temp.push(DEF.topAndPop());
+							seconds += 5;
 							break;
 						}
 						
@@ -216,15 +230,15 @@ class Row
 				case I : 
 					while (!temp.isEmpty())
 					{
-						if (letter == 'A'|| letter == 'B' || letter 'C')
+						if (letter == 'A'|| letter == 'B' || letter == 'C')
 						{
-							ABC.push(temp.topAndPop);
-							time += 5;
+							ABC.push(temp.topAndPop());
+							seconds += 5;
 						}
 						else
 						{
-							DEF.push(temp.topAndPop);
-							time += 5;
+							DEF.push(temp.topAndPop());
+							seconds += 5;
 						}
 						
 					}
@@ -234,27 +248,31 @@ class Row
 		}
 	}
 
-}
+};
 
 
-int main(argc, char * argv[])
+int main(int argc, char * argv[])
 {
 
 	Queue<int> passrows(288);
 	
 	Queue<char> passseats(288);
 
-	int row, print = 0;
+	int row, print = 0, seconds= 0;
 
 	char seat;
 
 	ifstream inf(argv[1]);
 
-	Queue<int> p(48);	
+	Queue<Row *> p(48);	
+
+	// enqueue only takes in int
 
 	for (int pt=1; pt <= 48; pt++)
 	{
-		p.enqueue(new Row(pt))
+	//	Row * ptr = new Row(pt);
+
+		p.enqueue(new Row(pt));
 	}		
 
 	while (!inf.eof()) //need to update the rows
@@ -273,10 +291,10 @@ int main(argc, char * argv[])
 			while (!passrows.isEmpty()) //if guy infront is getting seated and second guy is row # > him, second must wait; if smaller it can happen at the same time
 			{
 				// takes first guy and checks him through row class
-				p.getFront() = Row::Sit(passseats.getFront(), passrows.getFront()); // pointer at front of queue calls its sit function with seat letter as parameter
+				p.getFront() = Row::Sit(passseats.getFront(), passrows.getFront(), seconds); // pointer at front of queue calls its sit function with seat letter as parameter
 				// once done take him out of queue
-				passseats.dequeue(passseats.getFront());
-				passrows.dequeue(passrows.getFront();
+				passseats.dequeue();
+				passrows.dequeue();
 				// update the pointer queue for each passenger that's in the aisle?
 
 			}
@@ -284,14 +302,14 @@ int main(argc, char * argv[])
 		//print out the results
 		switch(print)
 		{
-			case 0 : cout << "Back to front: " << time << endl;
-			case 1 : cout << "Random: " << time << endl;
-			case 2 : cout << "Outside in: " << time << endl;
+			case 0 : cout << "Back to front: " << seconds << endl;
+			case 1 : cout << "Random: " << seconds << endl;
+			case 2 : cout << "Outside in: " << seconds << endl;
 		}	
 		//case for switch altered
 		print ++;
 		
 	}
-
+	return 0;
 }
 
