@@ -244,7 +244,7 @@ int main(argc, char * argv[])
 	
 	Queue<char> passseats(288);
 
-	int row, print;
+	int row, print = 0;
 
 	char seat;
 
@@ -281,17 +281,17 @@ int main(argc, char * argv[])
 
 			}
 		}
-		
+		//print out the results
+		switch(print)
+		{
+			case 0 : cout << "Back to front: " << time << endl;
+			case 1 : cout << "Random: " << time << endl;
+			case 2 : cout << "Outside in: " << time << endl;
+		}	
+		//case for switch altered
 		print ++;
 		
 	}
 
 }
 
-//print out the results
-switch(i)
-{
-	case 0 : cout << "Back to front: " << time << endl;
-	case 1 : cout << "Random: " << time << endl;
-	case 2 : cout << "Outside in: " << time << endl;
-}
