@@ -12,7 +12,7 @@ using namespace std;
 class Row
 {
   public:
-	int time = 0;
+	int time = 0, checkr;
 
 	Queue<char> wait(1);
 
@@ -24,9 +24,13 @@ class Row
 
 	typedef enum State {W,ST1,ST2,S,O,I};
 	
+	Row (int rownum)
+	{
+		checkr = rownum;
+	}
 
 
-	Sit (char letter)
+	Sit (char letter, int row)
 	{
 		State state = W;
 		while(true)
@@ -34,8 +38,9 @@ class Row
 			switch(state)
 			{
 				case W : time += 5; 
-					if ( ) //check that it's the correct row) 
+					if (row == checkr) //check that it's the correct row
 					{
+					
 						state = ST1;
 						break;
 					}
@@ -234,11 +239,12 @@ class Row
 
 int main(argc, char * argv[])
 {
+
 	Queue<int> passrows(288);
 	
 	Queue<char> passseats(288);
 
-	int row;
+	int row, print;
 
 	char seat;
 
@@ -248,10 +254,10 @@ int main(argc, char * argv[])
 
 	for (int pt=1; pt <= 48; pt++)
 	{
-		p.enqueue(new Row)
+		p.enqueue(new Row(pt))
 	}		
 
-	while (!inf.eof())
+	while (!inf.eof()) //need to update the rows
 	{
 		if(inf=="/n")
 		{
@@ -264,54 +270,28 @@ int main(argc, char * argv[])
 
 			}
 
-			while (!passrows.isEmpty())
-			{	
-				int front = passrows.getFront();
-				for (int match=1; match <=48; match++)
-				{
-					if ( front == match)
-					{
-						p.getFront() = Row::Sit(passseats.getFront());
-						break;
-					}
-					else
-					{
-						p.getFront() ++ ;
-					}
-					
-				}
+			while (!passrows.isEmpty()) //if guy infront is getting seated and second guy is row # > him, second must wait; if smaller it can happen at the same time
+			{
+				// takes first guy and checks him through row class
+				p.getFront() = Row::Sit(passseats.getFront(), passrows.getFront()); // pointer at front of queue calls its sit function with seat letter as parameter
+				// once done take him out of queue
+				passseats.dequeue(passseats.getFront());
+				passrows.dequeue(passrows.getFront();
+				// update the pointer queue for each passenger that's in the aisle?
 
 			}
 		}
 		
-		
+		print ++;
 		
 	}
 
+}
 
-// check the status of the person in the row
-/*	switch(state)
-	{
-		case W : time += 5; 
-			if ( ) //check that it's the correct row) 
-			{
-				state = ST1;
-				break;
-			}
-			else
-			{
-				return false;
-			}
-		case ST1 : time += 5; state = ST2; break;
-		case ST2 : time += 5; state = S; break;
-		case S : time += 5; return false;
-		case O : time += 5; state = I; break;
-		case I : time += 5; return false;
-	}
-*/
-//
-//	cout << "Back to front: " <<
-//	cout << "Random: " <<
-//	cout << "Outside in: " << 
-
+//print out the results
+switch(i)
+{
+	case 0 : cout << "Back to front: " << time << endl;
+	case 1 : cout << "Random: " << time << endl;
+	case 2 : cout << "Outside in: " << time << endl;
 }
