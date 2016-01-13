@@ -234,6 +234,9 @@ class Row
 
 int main(argc, char * argv[])
 {
+
+for (int i=0; i<3; i++)
+{
 	Queue<int> passrows(288);
 	
 	Queue<char> passseats(288);
@@ -288,7 +291,16 @@ int main(argc, char * argv[])
 		
 	}
 
+//print out the results
+switch(i)
+{
+	case 0 : cout << "Back to front: " << time << endl;
+	case 1 : cout << "Random: " << time << endl;
+	case 2 : cout << "Outside in: " << time << endl;
+}
 
+}
+}
 // check the status of the person in the row
 /*	switch(state)
 	{
