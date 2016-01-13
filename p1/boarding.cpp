@@ -24,7 +24,9 @@ class Row
 
 	typedef enum State {W,ST1,ST2,S,O,I};
 	
-	Row (char letter)
+
+
+	Sit (char letter)
 	{
 		State state = W;
 		while(true)
@@ -269,7 +271,7 @@ int main(argc, char * argv[])
 				{
 					if ( front == match)
 					{
-						p.getFront();
+						p.getFront() = Row::Sit(passseats.getFront());
 						break;
 					}
 					else
