@@ -258,7 +258,7 @@ int main(int argc, char * argv[])
 	
 	Queue<char> passseats(288);
 
-	int row, print = 0, seconds= 0, doopsec = 0, counter = 0, curr = 0;
+	int row, print = 0, seconds= 0, doopsec = 0, counter = 0, curr = 0, size = 0;
 
 	char seat;
 
@@ -273,6 +273,8 @@ int main(int argc, char * argv[])
 	Queue<char> as(48);
 
 	Queue<int> cur(48); // holds respective person's current row number
+
+	Queue<int> tar(48);
 
 	// enqueue only takes in int
 
@@ -300,7 +302,7 @@ int main(int argc, char * argv[])
 			// subtract 15 seconds per person minus 1
 			while (!passrows.isEmpty()) 
 			{
-				do {
+				do { // each loop adds a person to aisle queue and goes through procedure for everyone in aisle
 				
 					// add a person to the aisle queue
 					
@@ -314,15 +316,28 @@ int main(int argc, char * argv[])
 
 					while (!ar.isEmpty())
 					{
-						
+						tar.enqueue(ar.getFront());
+						ar.dequeue();
+						size ++;
 				
 					}
 
+					while (!tar.isEmpty());
+					{
+						ar.enqueue(tar.getFront());
+						tar.dequeue();
+
+					}	
+
+					for (int loop = 0; loop < size; loop++) //
+					{
+						
 						// get the proper pointer for the row a person is at
 
 						for (int c = 0; c <= cur.getFront(); c++)
 						{
-							tp.enqueue(p.getFront());
+							p.enqueue(p.getFront());
+
 							p.dequeue();						
 						}	
 
@@ -335,9 +350,13 @@ int main(int argc, char * argv[])
 						if ((seconds-doopsec) == 5)
 						{
 							doopsec += 5;
+
 							curr = cur.getFront();
+
 							curr ++;
+
 							cur.dequeue();
+			
 							cur.enqueue(curr);
 						}
 						else
@@ -350,7 +369,8 @@ int main(int argc, char * argv[])
 						
 							counter++;
 						}
-
+					}
+					
 				} while (!ar.isEmpty());
 
 				// update the pointer queue for each passenger that's in the aisle?
