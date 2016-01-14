@@ -258,27 +258,35 @@ int main(int argc, char * argv[])
 	
 	Queue<char> passseats(288);
 
-	int row, print = 0, seconds= 0;
+	int row, print = 0, seconds= 0, doopsec = 0, counter = 0, curr = 0;
 
 	char seat;
 
 	ifstream inf(argv[1]);
-
+	
 	Queue<Row *> p(48);	
+
+	Queue<Row *> tp(48);
+
+	Queue<int> ar(48);
+		
+	Queue<char> as(48);
+
+	Queue<int> cur(48); // holds respective person's current row number
 
 	// enqueue only takes in int
 
 	for (int pt=1; pt <= 48; pt++)
 	{
-	//	Row * ptr = new Row(pt);
-
 		p.enqueue(new Row(pt));
+		
 	}		
 
-	while (!inf.eof()) //need to update the rows
+	while (!inf.eof()) //while the file hasn't ended
 	{
-		if(inf=="/n")
+		if(inf=="/n") // if we run into a new line
 		{
+		//fill queue with the 288 passengers
 			while(inf >> row >> seat)
 			{
 			
@@ -288,13 +296,63 @@ int main(int argc, char * argv[])
 
 			}
 
-			while (!passrows.isEmpty()) //if guy infront is getting seated and second guy is row # > him, second must wait; if smaller it can happen at the same time
+			// have a counter that ++ if two rows have someone sitting at the same time
+			// subtract 15 seconds per person minus 1
+			while (!passrows.isEmpty()) 
 			{
-				// takes first guy and checks him through row class
-				p.getFront() = Row::Sit(passseats.getFront(), passrows.getFront(), seconds); // pointer at front of queue calls its sit function with seat letter as parameter
-				// once done take him out of queue
-				passseats.dequeue();
-				passrows.dequeue();
+				do {
+				
+					// add a person to the aisle queue
+					
+					ar.enqueue(passrows.getFront());
+
+					as.enqueue(passseats.getFront());
+
+					passrows.dequeue();
+				
+					passseats.dequeue();
+
+					while (!ar.isEmpty())
+					{
+						
+				
+					}
+
+						// get the proper pointer for the row a person is at
+
+						for (int c = 0; c <= cur.getFront(); c++)
+						{
+							tp.enqueue(p.getFront());
+							p.dequeue();						
+						}	
+
+						// takes front guy and checks him through row class
+						p.getFront()->Sit(as.getFront(), ar.getFront(), seconds); // pointer at front of queue calls its sit function with seat letter as parameter
+
+						// if seconds - doopsec = 5, that person isn't in the right row so move him up
+						// if != 5, he got seated so take him out and throw away
+				
+						if ((seconds-doopsec) == 5)
+						{
+							doopsec += 5;
+							curr = cur.getFront();
+							curr ++;
+							cur.dequeue();
+							cur.enqueue(curr);
+						}
+						else
+						{
+							ar.dequeue();
+
+							as.dequeue();
+
+							cur.dequeue();
+						
+							counter++;
+						}
+
+				} while (!ar.isEmpty());
+
 				// update the pointer queue for each passenger that's in the aisle?
 
 			}

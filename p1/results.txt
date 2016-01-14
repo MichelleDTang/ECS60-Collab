@@ -8,40 +8,34 @@ timetest.cpp operation testing:
 Test.dat
 1
 0
-Not OK, CPU time outside acceptable range
-0
+OK
 #2 for user input: 
 Test.dat
 2
 0
-Not OK, CPU time outside acceptable range
-2
+OK
 #3 for user input: 
 Test2.dat
 3
 0
-Not OK, CPU time outside acceptable range
-0
+OK
 #4 for user input: 
 Test2.dat
 4
 0
-Not OK, CPU time outside acceptable range
-0
+OK
 #5 for user input: 
 Test2.dat
 5
 0
-Not OK, CPU time outside acceptable range
-0
+OK
 #6 for user input: 
 Test2.dat
 6
 0
-Not OK, CPU time outside acceptable range
-0
+OK
 
 boarding.cpp:
 boarding.cpp not found.
-Timetest score: -1  Boarding score: 0
-Total: -1 out of 25.
+Timetest score: 5  Boarding score: 0
+Total: 5 out of 25.
