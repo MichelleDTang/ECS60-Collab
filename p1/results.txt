@@ -36,6 +36,24 @@ Test2.dat
 OK
 
 boarding.cpp:
-boarding.cpp not found.
+passengers-1.txt:
+There are differences between your output and Sean's.
+Yours: 
+Back to front: 1595
+Random: 3140
+Outside in: 4685
+passengers-2.txt:
+There are differences between your output and Sean's.
+Yours: 
+Back to front: 1595
+Random: 3095
+Outside in: 4640
+passengers-3.txt:
+There are differences between your output and Sean's.
+Yours: 
+Back to front: 1550
+passengers-4.txt:
+There are differences between your output and Sean's.
+Yours: 
 Timetest score: 5  Boarding score: 0
 Total: 5 out of 25.

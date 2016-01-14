@@ -14,7 +14,7 @@ class Row
 {
   public:
 	
-	int checkr, seconds;
+	int checkr, sec;
 
 	enum State {W,ST1,ST2,S,O,I};
 
@@ -27,9 +27,9 @@ class Row
 	StackAr<char> temp;
 	
 	
-	Row (int rownum)
+	Row ()
 	{
-		checkr = rownum;
+		checkr = 0;
 
 		Queue<char> wait(1);
 
@@ -41,40 +41,57 @@ class Row
 	
 	}
 
+	int setCheck(int rownum)
+	{
+		checkr = rownum;
+		return checkr;
+	}
 
-	int Sit (char letter, int row, int seconds)
+	int getCheck()
+	{
+		return checkr;
+
+	}	
+
+	int Sit (char letter, int m, int seconds)
 	{
 
-		State state = W;
-		while(true)
-		{
+			sec = seconds;
+
+//			cout << row << endl;
+
+//			cout << "checkr" << checkr << endl;
+
+			State state = W;
+		
 			switch(state)
 			{
-				case W : seconds += 5; 
-					if (row == checkr) //check that it's the correct row
+				case W : sec += 5; 
+
+					
+					if (m == 0) //check that it's the correct row
 					{
-						cout << "i" << endl;	
 						state = ST1;
-						break;
+						cout << " rows match" << endl;	
 					}
 					else
 					{
-						return seconds;
+						return sec;
 					}
-				case ST1 : seconds += 5; state = ST2; break;
-				case ST2 : seconds += 5; 
+				case ST1 : sec += 5; state = ST2; 
+				case ST2 : sec += 5; 
 					if (letter == 'A' ) // if the stack needs to be popped
 					{
 						if (!ABC.isEmpty())
 						{						
 
 							state = O;
-							break;
+							
 						}
 						else
 						{
 							state = S;
-							break;
+							
 						}								
 
 					}
@@ -83,87 +100,93 @@ class Row
 						if (!DEF.isEmpty())
 						{
 							state = O;
-							break;
+							
 						}
 						else
 						{
 							state = S;
-							break;
+							
 						}
 	
 					}
 					else if (letter == 'B')
 					{
+
 						if (!ABC.isEmpty())
 						{
 							if (ABC.top() == 'C')
 							{
 								state = O;
-								break;
+								
 							}
 							else
 							{
 								state = S;
-								break;
+								
 							}
 						}
 						else
 						{
 							state = S; 
-							break;
+							
 						}
 					}
 					else if (letter == 'E')
 					{
+
 						if (!DEF.isEmpty())
 						{
 							if (DEF.top() == 'D')
 							{
 								state = O;
-								break;
+								
 							}
 						}
 						else
 						{
 							state = S;
-							break;
+							
 						}
 					}
 					else //C or D
 					{
 						state = S;
-						break;
+						
 					}
 
 				case S :  
+
 					if (letter == 'A' || letter == 'B' || letter == 'C')
 					{
 						ABC.push(letter);
-						seconds += 5;
+						sec += 5;
 						if (!temp.isEmpty())
 						{
 							state = I;
-							break;
+							
 						}
 						else
 						{
-							return seconds;
+							cout << "sitting" << sec << endl;
+							return sec;
 						}
 
 					}	
 					else
 					{
 						DEF.push(letter);
-						seconds += 5;
+						sec += 5;
 						if (!temp.isEmpty())
 						{
 							state = I;
-							break;
+							
 
 						}
 						else
 						{					
-							return seconds;
+							cout << "sitting" << sec << endl;
+							
+							return sec;
 						}
 					}
 				case O : 
@@ -173,27 +196,29 @@ class Row
 						{						
 							if (ABC.top() == 'C')
 							{
+
 								temp.push(ABC.topAndPop());
-								seconds += 5;
+								sec += 5;
 								if (!ABC.isEmpty())
 								{
 									temp.push(ABC.topAndPop());
-									seconds += 5;
+									sec += 5;
 									state = S;
-									break;
+									
 								}
 								else
 								{
 									state = S;
-									break;
+									
 								}
 							}
 						}
 						else
 						{
 							temp.push(ABC.topAndPop());
-							seconds += 5;
-							break;
+							sec += 5;
+							state = S;
+							
 						}
 					}
 					else
@@ -203,26 +228,26 @@ class Row
 							if (ABC.top() == 'D')
 							{
 								temp.push(DEF.topAndPop());
-								seconds += 5;
+								sec += 5;
 								if (!DEF.isEmpty())
 								{
 									temp.push(DEF.topAndPop());
-									seconds += 5;
+									sec += 5;
 									state = S;
-									break;
+									
 								}
 								else
 								{
 									state = S;
-									break;
+									
 								}
 							}
 						}
 						else
 						{
 							temp.push(DEF.topAndPop());
-							seconds += 5;
-							break;
+							sec += 5;
+							
 						}
 						
 						
@@ -234,19 +259,20 @@ class Row
 						if (letter == 'A'|| letter == 'B' || letter == 'C')
 						{
 							ABC.push(temp.topAndPop());
-							seconds += 5;
+							sec += 5;
 						}
 						else
 						{
 							DEF.push(temp.topAndPop());
-							seconds += 5;
+							sec += 5;
 						}
 						
 					}
-					return seconds;
+					cout << " blocked " << sec << endl;
+					return sec;
 
 			}
-		}
+		return 0;
 	}
 
 };
@@ -259,7 +285,7 @@ int main(int argc, char * argv[])
 	
 	Queue<char> passseats(288);
 
-	int row,seconds= 0, doopsec = 0, counter = 0, curr = 1, size = 0;
+	int row, print = 0, seconds= 0, doopsec = 0, counter = 0, curr = 1, size = 0;
 
 	char seat;
 
@@ -277,18 +303,63 @@ int main(int argc, char * argv[])
 
 	Queue<int> tar(48);
 
-	Queue<int> print(3);
+	Queue<char> tas(48);
 
 	// enqueue only takes in int
 
-	for (int pt=1; pt <= 48; pt++)
+	for (int pt = 1; pt <= 48; pt++)
 	{
-		p.enqueue(new Row(pt));
-		
-	}		
+		Row *r = new Row;
 
-	while (!inf.eof()) //while the file hasn't ended
+		r -> setCheck(pt);
+
+//		cout << pt << endl;
+
+//		cout << r -> getCheck() << endl;
+
+		p.enqueue(r);
+	}
+/*
+	for (int g = 1; g <= 48; g++)
 	{
+		cout << p.getFront() -> getCheck() << endl;
+		
+		tp.enqueue(p.getFront());
+
+		p.dequeue();
+
+		p.enqueue(tp.getFront());
+		
+		tp.dequeue();
+	}
+*/
+//	for (int pt=1; pt < 48; pt++)
+//	{	
+//		r = tp.getFront()++;
+//		tp.getFront() -> setCheck(pt+1);		
+//		p.enqueue(r);
+//	}
+
+
+/*	for (int pt=1; pt <= 48; pt++)
+	{
+		Row *r = new Row;
+		p.enqueue(r);
+		r -> setCheck(pt);
+	}		
+*/
+
+//	Row *r1, *r2, *r3, *r4, *r5, *r6, *r7, *r8, *r9, *r10, *r11, *r12, *r13, *r14, *r15, *r16, *r17, *r18, *r19, *r20, *r21, *r22, *r23, *r24, *r25, *r26, *r27, *r28, *r29, *r30, 
+//	*r31, *r32, *r33, *r34, *r35, *r36, *r37, *r38, *r39, *r40,*r41, *r42, *r43, *r44, *r45, *r46, *r47, *r48;
+
+
+
+	
+
+	while (print != 3) //while the file hasn't ended
+	{
+			cur.makeEmpty();
+
 			//fill queue with the 288 passengers
 			for (int q = 0; q < 288; q++)
 			{
@@ -305,61 +376,103 @@ int main(int argc, char * argv[])
 			// subtract 15 seconds per person minus 1
 			while (!passrows.isEmpty()) 
 			{
+//				cout << "1" << endl;
 
 				do { // each loop adds a person to aisle queue and goes through procedure for everyone in aisle
 				
 					// add a person to the aisle queue
 					
-					ar.enqueue(passrows.getFront());
+//					cout << "2" << endl;
 
-					as.enqueue(passseats.getFront());
-
-					passrows.dequeue();
-				
-					passseats.dequeue();
-
-					while (!ar.isEmpty())
+					if(!cur.isFull())
 					{
-						tar.enqueue(ar.getFront());
-						ar.dequeue();
+
+						ar.enqueue(passrows.getFront());
+
+						as.enqueue(passseats.getFront());
+
+						passrows.dequeue();
+				
+						passseats.dequeue();
+					}
+
+					
+					while (!ar.isEmpty())  // when aisle still has people
+					{
+						tar.enqueue(ar.getFront()); // add first person in aisle to temp
+						ar.dequeue(); // take out first person
 						size ++;
-			
+//						cout << "3" << endl;
 	
 					}
 
-					while (!tar.isEmpty())
+					while (!tar.isEmpty())  // when temp isn't empty
 					{
-						ar.enqueue(tar.getFront());
-						tar.dequeue();
-						
+						ar.enqueue(tar.getFront()); // add person in temp to back of aisle line up
+						tar.dequeue();  // take out person we just put back into line up
+//						cout << "4" << endl;	
 					}	
 
 
-					for (int loop = 0; loop < (size-1); loop++) // 
+					for (int loop = 0; loop < size; loop++) // iterate through all the people in the aisle
 					{
-						cout << "a" << endl;					
-						cur.enqueue(curr);
+						cout << "5" << endl;
+
+						cur.enqueue(curr); // update the row that the newest person in the aisle is in
 	
+
 						// get the proper pointer for the row a person is at
-						for (int c = 0; c < cur.getFront(); c++)
+
+
+						for (int g = 1; g < cur.getFront(); g++)
 						{
-							cout << "0" << endl;
+							cout << "row of pointer " << p.getFront() -> getCheck() << " for " << ar.getFront() << as. getFront() << endl;
+			
 							tp.enqueue(p.getFront());
-							cout << "1" << endl;
-							p.dequeue();						
+
+							p.dequeue();
+
 							p.enqueue(tp.getFront());
+		
 							tp.dequeue();
+						}
+
+
+
+
+/*						for (int c = 1; c <= cur.getFront(); c++) // find the pointer to the row that the first person in the aisle queue needs to check
+						{
+//							cout << "6" << endl;
+							
+							tp.enqueue(p.getFront()); // add the pointer to the row to the temp
+							p.dequeue();			// take pointer out of front			
+							p.enqueue(tp.getFront()); // add first pointer in temp back into original
+							tp.dequeue();  // take out of temp
 						}	
-						cout << as.getFront() << endl;
-						cout << ar.getFront() << endl;
-						cout << "2" << endl;
-						// takes front guy and checks him through row class
-						p.getFront()->Sit(as.getFront(), ar.getFront(), seconds); // pointer at front of queue calls its sit function with seat letter as parameter
-						cout << "c" << endl;
+*/						// takes front guy and checks him through row class
+						if (p.getFront() -> getCheck() == ar.getFront())
+						{
+							cout << p.getFront() -> getCheck() << " " << ar.getFront();
 						
-						for (int reset = 0; reset <= (48-size); reset++)
+							seconds = p.getFront()->Sit(as.getFront(), 0, seconds); // pointer at front of queue calls its sit function with seat letter as parameter
+						
+							cout << "sec " << seconds << endl;
+						}
+						else
+						{
+							seconds = p.getFront()-> Sit(as.getFront(), 1, seconds);
+
+							cout << p.getFront() -> getCheck() << " " << ar.getFront();
+
+						}						
+
+
+						cout << "reset" << endl;
+
+						while (p.getFront() -> getCheck() != 1) // for rest of pointers that should be behind the checked rows
 						{
 							
+
 							tp.enqueue(p.getFront()); // move front of point to temp point
 														
 							p.dequeue();
@@ -370,36 +483,64 @@ int main(int argc, char * argv[])
 
 						}						
 
-						cout << "7" << endl;
+						cout << p.getFront() -> getCheck() << endl;
 
+						
 						// if seconds - doopsec = 5, that person isn't in the right row so move him up
 						// if != 5, he got seated so take him out and throw away
 				
-						if ((seconds-doopsec) == 5)
+						if ((seconds-doopsec) == 5) // if the person wasn't in their proper row
 						{
+							cout << "wait" << endl;
+							
 							doopsec += 5;
 
-							curr = cur.getFront();
+							curr = cur.getFront(); // curr is the number corresponding to the row the person should be in
 
-							curr ++;
+							curr ++; // add 1 meaning person goes onto next row
 
-							cur.dequeue();
+							cur.dequeue(); // get rid of old row value
 			
-							cur.enqueue(curr);
+							cur.enqueue(curr); // add the new row value for person to back to the current status queue
 						}
 						else
 						{
-							ar.dequeue();
+							cout << "sit" << endl;
+					
+							doopsec += (seconds - doopsec); // doopsec adds on the time it too for the person to sit
+							
+							ar.dequeue(); // person's row number is tossed out
 
-							as.dequeue();
+							as.dequeue(); // person's seat is tossed out
 
-							cur.dequeue();
+							cur.dequeue(); // person's current row # is taken out
 						
 							counter++;
 						}
-						cout << "b" << endl;	
 						curr = 1;	
-				}
+					// refresh aisle
+						tar.enqueue(ar.getFront());
+						ar.dequeue();
+						ar.enqueue(tar.getFront());
+						tar.dequeue();
+						tas.enqueue(as.getFront());
+						as.dequeue();
+						as.enqueue(tas.getFront());
+						tas.dequeue();
+					}
+					for(int s =0;s < (48-size); s++)
+					{
+						tar.enqueue(ar.getFront());
+						ar.dequeue();
+						ar.enqueue(tar.getFront());
+						tar.dequeue();
+						tas.enqueue(as.getFront());
+						as.dequeue();
+						as.enqueue(tas.getFront());
+						tas.dequeue();
+
+
+					}
 					
 					size = 0;
 
@@ -408,16 +549,35 @@ int main(int argc, char * argv[])
 				// update the pointer queue for each passenger that's in the aisle?
 
 			}
-		
-			print.enqueue(seconds);			
+			
+
+	/*		cout << "add to print" << endl;
+			cout << seconds << endl;	
+	//		print.enqueue(seconds);			
+			cout << print.getFront();
+			cout << seconds << endl; */
+
+	
+		switch(print)
+		{
+			case 0: cout << "Back to front: " << seconds << endl; break;
+			case 1: cout << "Random: " << seconds << endl; break;
+			case 2: cout << "Outside in: " << seconds << endl; break;
+		}
+	
+		print++;
+		seconds = 0;
+		doopsec = 0;
 
 	}
-			cout << "Back to front: " << print.getFront() << endl;
-			print.dequeue();
-			cout << "Random: " << print.getFront() << endl;
-			print.dequeue();
-			cout << "Outside in: " << print.getFront() << endl;
+	/*		cout << " please " << endl;
 
+			cout << "Back to front: " << print.getFront() << endl;
+	//		print.dequeue();
+			cout << "Random: " << print.getFront() << endl;
+	//		print.dequeue();
+			cout << "Outside in: " << print.getFront() << endl;
+	*/
 	return 0;
 }
 
