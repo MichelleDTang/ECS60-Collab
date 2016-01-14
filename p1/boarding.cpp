@@ -53,13 +53,13 @@ class Row
 				case W : seconds += 5; 
 					if (row == checkr) //check that it's the correct row
 					{
-					
+						cout << "i" << endl;	
 						state = ST1;
 						break;
 					}
 					else
 					{
-						return false;
+						return seconds;
 					}
 				case ST1 : seconds += 5; state = ST2; break;
 				case ST2 : seconds += 5; 
@@ -67,6 +67,7 @@ class Row
 					{
 						if (!ABC.isEmpty())
 						{						
+
 							state = O;
 							break;
 						}
@@ -146,7 +147,7 @@ class Row
 						}
 						else
 						{
-							return false;
+							return seconds;
 						}
 
 					}	
@@ -162,7 +163,7 @@ class Row
 						}
 						else
 						{					
-							return false;
+							return seconds;
 						}
 					}
 				case O : 
@@ -242,7 +243,7 @@ class Row
 						}
 						
 					}
-					return false;
+					return seconds;
 
 			}
 		}
@@ -258,7 +259,7 @@ int main(int argc, char * argv[])
 	
 	Queue<char> passseats(288);
 
-	int row, print = 0, seconds= 0, doopsec = 0, counter = 0, curr = 0, size = 0;
+	int row,seconds= 0, doopsec = 0, counter = 0, curr = 1, size = 0;
 
 	char seat;
 
@@ -276,6 +277,8 @@ int main(int argc, char * argv[])
 
 	Queue<int> tar(48);
 
+	Queue<int> print(3);
+
 	// enqueue only takes in int
 
 	for (int pt=1; pt <= 48; pt++)
@@ -286,11 +289,11 @@ int main(int argc, char * argv[])
 
 	while (!inf.eof()) //while the file hasn't ended
 	{
-		if(inf=="/n") // if we run into a new line
-		{
-		//fill queue with the 288 passengers
-			while(inf >> row >> seat)
+			//fill queue with the 288 passengers
+			for (int q = 0; q < 288; q++)
 			{
+
+				inf >> row >> seat;
 			
 				passrows.enqueue(row);
 
@@ -302,6 +305,7 @@ int main(int argc, char * argv[])
 			// subtract 15 seconds per person minus 1
 			while (!passrows.isEmpty()) 
 			{
+
 				do { // each loop adds a person to aisle queue and goes through procedure for everyone in aisle
 				
 					// add a person to the aisle queue
@@ -319,30 +323,54 @@ int main(int argc, char * argv[])
 						tar.enqueue(ar.getFront());
 						ar.dequeue();
 						size ++;
-				
+			
+	
 					}
 
-					while (!tar.isEmpty());
+					while (!tar.isEmpty())
 					{
 						ar.enqueue(tar.getFront());
 						tar.dequeue();
-
+						
 					}	
 
-					for (int loop = 0; loop < size; loop++) //
+
+					for (int loop = 0; loop < (size-1); loop++) // 
 					{
-						
+						cout << "a" << endl;					
+						cur.enqueue(curr);
+	
 						// get the proper pointer for the row a person is at
-
-						for (int c = 0; c <= cur.getFront(); c++)
+						for (int c = 0; c < cur.getFront(); c++)
 						{
-							p.enqueue(p.getFront());
-
+							cout << "0" << endl;
+							tp.enqueue(p.getFront());
+							cout << "1" << endl;
 							p.dequeue();						
+							p.enqueue(tp.getFront());
+							tp.dequeue();
 						}	
-
+						cout << as.getFront() << endl;
+						cout << ar.getFront() << endl;
+						cout << "2" << endl;
 						// takes front guy and checks him through row class
 						p.getFront()->Sit(as.getFront(), ar.getFront(), seconds); // pointer at front of queue calls its sit function with seat letter as parameter
+						cout << "c" << endl;
+						
+						for (int reset = 0; reset <= (48-size); reset++)
+						{
+							
+							tp.enqueue(p.getFront()); // move front of point to temp point
+														
+							p.dequeue();
+
+							p.enqueue(tp.getFront()); // 
+
+							tp.dequeue();
+
+						}						
+
+						cout << "7" << endl;
 
 						// if seconds - doopsec = 5, that person isn't in the right row so move him up
 						// if != 5, he got seated so take him out and throw away
@@ -369,25 +397,27 @@ int main(int argc, char * argv[])
 						
 							counter++;
 						}
-					}
+						cout << "b" << endl;	
+						curr = 1;	
+				}
 					
+					size = 0;
+
 				} while (!ar.isEmpty());
 
 				// update the pointer queue for each passenger that's in the aisle?
 
 			}
-		}
-		//print out the results
-		switch(print)
-		{
-			case 0 : cout << "Back to front: " << seconds << endl;
-			case 1 : cout << "Random: " << seconds << endl;
-			case 2 : cout << "Outside in: " << seconds << endl;
-		}	
-		//case for switch altered
-		print ++;
 		
+			print.enqueue(seconds);			
+
 	}
+			cout << "Back to front: " << print.getFront() << endl;
+			print.dequeue();
+			cout << "Random: " << print.getFront() << endl;
+			print.dequeue();
+			cout << "Outside in: " << print.getFront() << endl;
+
 	return 0;
 }
 
