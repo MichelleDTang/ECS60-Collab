@@ -16,6 +16,8 @@ class Row
 	
 	int checkr, sec;
 
+	char state;
+
 	enum State {W,ST1,ST2,S,O,I};
 
 	Queue<char> wait;
@@ -53,17 +55,16 @@ class Row
 
 	}	
 
-	int  Sit (char letter, int m)
+	int Sit (char letter, int m, int state)
 	{
 
 //			sec = seconds;
-
-			State state = W;
+						
 		
 			switch(state)
 			{
 
-				case W : sec += 5; 
+				case 1 : sec += 5; 
 			
 /*					if (!ABC.isEmpty())
 					{
@@ -78,29 +79,29 @@ class Row
 
 */					if (m == 0) //check that it's the correct row
 					{
-						state = ST1;
-//						cout << " rows match" << endl;	
-						return 2;
+					//	state = ST1;
+						cout << " rows match" << endl;	
+						state = 4; break;
 					}
 					else
 					{
-						return 0;
+						state = 1; break;
 					}
-				case ST1 : sec += 5; state = ST2; return 2;
-				case ST2 : sec += 5; 
+				case 2 : sec += 5; state = 3; break;
+				case 3 : sec += 5; 
 					if (letter == 'A' ) // if the stack needs to be popped
 					{
 						if (!ABC.isEmpty()) // B or C is sitting down in that row
 						{						
 
-							state = O;
-							return 2;	
+//							state = O;
+							state = 5; break;
 						}
 						else // no one blocking 
 						{
 										
-							state = S;
-							return 2;
+//							state = S;
+							state =  4; break;
 						}								
 
 					}
@@ -108,13 +109,13 @@ class Row
 					{
 						if (!DEF.isEmpty()) // D or E is sitting down
 						{
-							state = O;
-							return 2;	
+//							state = O;
+							state = 5; break;	
 						}
 						else // no one blocking
 						{
-							state = S;
-							return 2;
+//							state = S;
+							state = 4; break;
 						}
 	
 					}
@@ -125,19 +126,20 @@ class Row
 						{
 							if (ABC.top() == 'C') // stack must be popped
 							{
-								state = O;
-								return 2;
+//								state = O;
+								state = 5; break;
 							}
 							else // stack doesn't need to be popped
 							{
-								state = S;
-								return 2;
+//								state = S;
+								state = 4; break;
 							}
 						}
 						else // no one blocking
 						{
-							state = S; 
-							return 2;
+//							state = S; 
+							state = 4;
+							break;
 						}
 					}
 					else if (letter == 'E')
@@ -147,29 +149,30 @@ class Row
 						{
 							if (DEF.top() == 'D') // pop stack
 							{
-								state = O;
-								return 2;								
+//								state = O;
+								state = 5; break;							
 							}
 							else // stack doesn't need popping
 							{
-								state = S;
-								return 2;
+//								state = S;
+								state = 4; break;
 							}
 							
 						}
 						else // no one blocking
 						{
-							state = S;
-							return 2;
+//							state = S;
+							state =  4; break;
 						}
 					}
 					else //C or D
 					{
-						state = S;
-						return 2;
+//						state = S;
+						state = 4;
+						break;
 					}
 
-				case S :  
+				case 4 :  
 
 					if (letter == 'A' || letter == 'B' || letter == 'C')
 					{
@@ -177,13 +180,15 @@ class Row
 						sec += 5;
 						if (!temp.isEmpty()) // if someone had to be popped
 						{
-							state = I;
-							return 2;
+//							state = I;
+							state = 6;
+							break;
 						}
 						else
 						{
 //							cout << "sitting" << sec << endl;
-							return 1;
+							state =  7;
+							break;
 						}
 
 					}	
@@ -193,18 +198,20 @@ class Row
 						sec += 5;
 						if (!temp.isEmpty())
 						{
-							state = I;
-							return 2;
+//							state = I;
+							state =  6;
+							break;
 
 						}
 						else
 						{					
 //							cout << "sitting" << sec << endl;
 							
-							return 1;
+							state =  7;
+							break;
 						}
 					}
-				case O : 
+				case 5 : 
 					
 
 					if (letter == 'A' || letter == 'B')
@@ -222,13 +229,15 @@ class Row
 									temp.push(ABC.top()); // move out A
 									ABC.pop();
 									sec += 5;
-									state = S;
-									return 2;	
+//									state = S;
+									state =  4;
+									break;	
 								}
 								else
 								{
-									state = S; // if only C, go to sit
-									return 2;
+//									state = S; // if only C, go to sit
+									state = 4;
+									break;
 								}
 							}
 						}
@@ -237,8 +246,9 @@ class Row
 							temp.push(ABC.top()); // if letter B
 							ABC.pop(); // pop off top which would be C
 							sec += 5;
-							state = S;
-							return 2;
+//							state = S;
+							state =  4;
+							break;
 						}
 					}
 					else // E or F
@@ -255,13 +265,15 @@ class Row
 									temp.push(DEF.top());
 									DEF.pop();
 									sec += 5;
-									state = S;
-									return 2;	
+//									state = S;
+									state = 4;	
+									break;
 								}
 								else
 								{
-									state = S;
-									return 2;			
+//									state = S;
+									state = 4;			
+									break;
 								}
 							}
 						}
@@ -270,13 +282,14 @@ class Row
 							temp.push(DEF.top());
 							DEF.pop();
 							sec += 5;
-							
+							state = 4;
+							break;
 						}
 						
 						
 					}
 
-				case I : 
+				case 6 : 
 					while (!temp.isEmpty())
 					{
 						if (letter == 'A'|| letter == 'B' || letter == 'C')
@@ -294,10 +307,11 @@ class Row
 						
 					}
 //					cout << " blocked " << sec << endl;
-					return 1;
-
+					state = 7;
+					break;
+					
 			}
-		return 0;
+		return state;
 	}
 
 };
@@ -310,7 +324,7 @@ int main(int argc, char ** argv)
 	
 	Queue<char> passseats(288);
 
-	int row, print = 0, stat = 0, curr = 1, size = 0, plane = 0;
+	int row, print = 0, stat = 1, curr = 1, size = 0, plane = 0, tmpcurr = 3;
 
 	char seat;
 
@@ -333,6 +347,12 @@ int main(int argc, char ** argv)
 	Queue<char> tas(48);
 
 	StackAr<int> tmp(1);
+
+	Queue<int> tmpcur(48);
+
+	Queue<int> status(48);
+
+	status.enqueue(stat);
 
 	// enqueue only takes in int
 
@@ -403,7 +423,10 @@ int main(int argc, char ** argv)
 					
 					//cout << " add next person to the aisle" << endl;					
 
-					if(!ar.isFull() && !passrows.isEmpty())
+					if (cur.isEmpty()) curr = 0;
+					
+
+					if(!ar.isFull() && !passrows.isEmpty() && curr > (size-1))
 					{
 
 //						cout << " aisle isn't full yet" << endl;
@@ -417,7 +440,11 @@ int main(int argc, char ** argv)
 						passseats.dequeue();
 
 						cur.enqueue(curr);
+
+						tmpcur.enqueue(curr+2);
 						
+						tmpcurr = tmpcur.getFront();
+
 						//cout << " another person enters the aisle" << endl;
 					}
 
@@ -462,7 +489,7 @@ int main(int argc, char ** argv)
 
 						for (int g = 0; g < cur.getFront(); g++)
 						{
-	//						cout << "row of pointer " << p.getFront() -> getCheck() << " for " << ar.getFront() << as.getFront() << endl;
+							cout << "row of pointer " << p.getFront() -> getCheck() << " for " << ar.getFront() << as.getFront() << endl;
 			
 							tp.enqueue(p.getFront());
 
@@ -486,11 +513,13 @@ int main(int argc, char ** argv)
 							tp.dequeue();  // take out of temp
 						}	
 */						// takes front guy and checks him through row class
+						cout << stat << endl;
+
 						if (p.getFront() -> getCheck() == ar.getFront())
 						{
-//							cout << p.getFront() -> getCheck() << "  match" << ar.getFront();
+							cout << p.getFront() -> getCheck() << "  match" << ar.getFront();
 						
-							stat = p.getFront()->Sit(as.getFront(), 0); // pointer at front of queue calls its sit function with seat letter as parameter
+							stat = p.getFront()->Sit(as.getFront(), 0, status.getFront()); // pointer at front of queue calls its sit function with seat letter as parameter
 							
 							tmp.push(ar.getFront());
 						
@@ -498,14 +527,14 @@ int main(int argc, char ** argv)
 						}
 						else
 						{
-							stat = p.getFront()-> Sit(as.getFront(), 1);
+							stat = p.getFront()-> Sit(as.getFront(), 1, status.getFront());
 
 //							cout << p.getFront() -> getCheck() << "<- point's row  move along  person's row ->" << ar.getFront() << endl;
 
 						}						
-
 						
-//						cout << "reset" << endl;
+						
+						cout << "returned " << stat << endl;
 
 						while (p.getFront() -> getCheck() != 1) // for rest of pointers that should be behind the checked rows
 						{
@@ -523,44 +552,74 @@ int main(int argc, char ** argv)
 //						cout << p.getFront() -> getCheck() << endl;
 
 						
-						// if seconds - doopsec = 5, that person isn't in the right row so move him up
-						// if != 5, he got seated so take him out and throw away
-
-
 				
-						if (stat == 0) // if the person wasn't in their proper row
+						if (stat == 1) // if the person wasn't in their proper row and no one is blocking their front
 						{
-					//		cout << "wait" << endl;
+							if (tmpcurr - cur.getFront() != 1) // they can move up
+							{
+								cout << "moving " << endl;
+
+								status.dequeue();
+								status.enqueue(stat);
+								stat = status.getFront();
 							
-							curr = cur.getFront(); // curr is the number corresponding to the row the person should be in
-
-							curr ++; // add 1 meaning person goes onto next row
-
-							cur.dequeue(); // get rid of old row value
+								curr = cur.getFront(); // curr is the number corresponding to the row the person is in
+	
+								curr ++; // add 1 meaning person goes onto next row
+	
+								cur.dequeue(); // get rid of old row value
 			
-							cur.enqueue(curr); // add the new row value for person to back to the current status queue
+								cur.enqueue(curr); // add the new row value for person to back to the current status queue
+
+								tmpcurr = cur.getFront() + 1;				
+
+								tmpcur.dequeue();								
+							
+								tmpcur.enqueue(tmpcurr);							
 
 //							cout << "old cur removed " << cur.getFront() << endl;
 
 							// refresh aisle
-							tar.enqueue(ar.getFront()); // tmp takes first in aisle
-							ar.dequeue();	// aisle queue deletes 
-							ar.enqueue(tar.getFront()); // aisle queues adds to back
-							tar.dequeue(); // tmp deletes
-							tas.enqueue(as.getFront()); // does same except with letters
-							as.dequeue();
-							as.enqueue(tas.getFront());
-							tas.dequeue();
+								tar.enqueue(ar.getFront()); // tmp takes first in aisle
+								ar.dequeue();	// aisle queue deletes 
+								ar.enqueue(tar.getFront()); // aisle queues adds to back
+								tar.dequeue(); // tmp deletes
+								tas.enqueue(as.getFront()); // does same except with letters
+								as.dequeue();
+								as.enqueue(tas.getFront());
+								tas.dequeue();
 						
 //							cout << " aisle refreshed " << endl;
+							}
+							else //someone is in the way
+							{
+//								cout << "blocked " << endl;
+
+								curr = cur.getFront();
+								cur.dequeue();
+								cur.enqueue(curr);
+								tmpcurr = tmpcur.getFront();
+								tmpcur.dequeue();
+								tmpcur.enqueue(tmpcur.getFront());
+
+								status.dequeue();
+								status.enqueue(stat);
+								stat = status.getFront();
+
+								// refresh aisle
+								tar.enqueue(ar.getFront()); // tmp takes first in aisle
+								ar.dequeue();	// aisle queue deletes 
+								ar.enqueue(tar.getFront()); // aisle queues adds to back
+								tar.dequeue(); // tmp deletes
+								tas.enqueue(as.getFront()); // does same except with letters
+								as.dequeue();
+								as.enqueue(tas.getFront());
+								tas.dequeue();
+			
+							}
 
 						}
-						else if ( stat == 2)
-						{
-							
-							
-						}
-						else 
+						else if (stat == 7)
 						{
 							
 							ar.dequeue(); // person's row number is tossed out
@@ -568,55 +627,53 @@ int main(int argc, char ** argv)
 							as.dequeue(); // person's seat is tossed out
 
 							cur.dequeue(); // person's current row # is taken out
+								
+							tmpcurr = tmpcur.getFront();
+
+							cout << "someone sits " << endl;
+
+							tmpcur.dequeue();
+
+							status.dequeue();
+
+							stat = status.getFront();
 				
 							size --;					
 							
-/*							if (!passrows.isEmpty() || !ar.isEmpty()) // if we're not checking the last guy in aisle
-							{
+						}
 
-								if(tmp.top() <= ar.getFront()) // if the guy sitting belongs to a row closer than the guy behind him or are from the same row
-								{
-									// add on the time it takes to sit
-												
-									//cout << "someone sitting" << endl;
+						else 
+						{
+							cout << " sitting " << endl;
+							curr = cur.getFront();
+							cur.dequeue();
+							cur.enqueue(curr);
+							tmpcur.enqueue(tmpcur.getFront());
+							tmpcur.dequeue();
+						
+							status.dequeue();
+							status.enqueue(stat);
+							stat = status.getFront();
 
-									if ( (seconds-doopsec) == 20)
-									{
-										counter++;
-									}
-									else if ( (seconds - doopsec) == 30)
-									{
-										counter1block++;
-									}
-									else if ((seconds-doopsec) == 40)
-									{
-										counter2block++;
-									}
-								}
-
-							}
-							else
-							{
-								
-								if((seconds-doopsec) == 15)
-								{
-									plane+=15;
-								}
-								else if((seconds-doopsec) == 25)
-								{
-									plane+=25;
-								}
-								else
-								{
-									plane+=35;	
-
-								}
-							}
-*/
+							tar.enqueue(ar.getFront()); // tmp takes first in aisle
+							ar.dequeue();	// aisle queue deletes 
+							ar.enqueue(tar.getFront()); // aisle queues adds to back
+							tar.dequeue(); // tmp deletes
+							tas.enqueue(as.getFront()); // does same except with letters
+							as.dequeue();
+							as.enqueue(tas.getFront());
+							tas.dequeue();						
+							
+						}
+	
+						
 //							doopsec += (seconds - doopsec);
-						}							
+					
+						tmpcurr = tmpcur.getFront();
 						curr = 1;	
 						tmp.makeEmpty();
+					//	stat = status.getFront();	
+						cout << "tmp" << endl;
 					}	
 					
 					
