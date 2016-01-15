@@ -81,7 +81,7 @@ class Row
 					{
 					//	state = ST1;
 						cout << " rows match" << endl;	
-						state = 4; break;
+						state = 2; break;
 					}
 					else
 					{
@@ -324,7 +324,7 @@ int main(int argc, char ** argv)
 	
 	Queue<char> passseats(288);
 
-	int row, print = 0, stat = 1, curr = 1, size = 0, plane = 0, tmpcurr = 3;
+	int row, print = 0, stat = 1, curr = 1, size = 0, plane = 0, tmpcurr = 3, c;
 
 	char seat;
 
@@ -352,7 +352,6 @@ int main(int argc, char ** argv)
 
 	Queue<int> status(48);
 
-	status.enqueue(stat);
 
 	// enqueue only takes in int
 
@@ -426,7 +425,7 @@ int main(int argc, char ** argv)
 					if (cur.isEmpty()) curr = 0;
 					
 
-					if(!ar.isFull() && !passrows.isEmpty() && curr > (size-1))
+					if(!ar.isFull() && !passrows.isEmpty() && c > 1 )
 					{
 
 //						cout << " aisle isn't full yet" << endl;
@@ -439,11 +438,13 @@ int main(int argc, char ** argv)
 				
 						passseats.dequeue();
 
-						cur.enqueue(curr);
+						cur.enqueue(1);
 
-						tmpcur.enqueue(curr+2);
+						tmpcur.enqueue(3);
 						
 						tmpcurr = tmpcur.getFront();
+
+						status.enqueue(1);
 
 						//cout << " another person enters the aisle" << endl;
 					}
@@ -487,8 +488,9 @@ int main(int argc, char ** argv)
 						// get the proper pointer for the row a person is at
 
 
-						for (int g = 0; g < cur.getFront(); g++)
+						for (int g = 1; g < cur.getFront(); g++)
 						{
+
 							cout << "row of pointer " << p.getFront() -> getCheck() << " for " << ar.getFront() << as.getFront() << endl;
 			
 							tp.enqueue(p.getFront());
@@ -500,7 +502,7 @@ int main(int argc, char ** argv)
 							tp.dequeue();
 						}
 
-
+						cout << " row of pointers " << p.getFront() -> getCheck() << " for " << ar.getFront() << as.getFront() << endl;
 
 
 /*						for (int c = 1; c <= cur.getFront(); c++) // find the pointer to the row that the first person in the aisle queue needs to check
@@ -536,6 +538,8 @@ int main(int argc, char ** argv)
 						
 						cout << "returned " << stat << endl;
 
+						
+
 						while (p.getFront() -> getCheck() != 1) // for rest of pointers that should be behind the checked rows
 						{
 						
@@ -549,7 +553,7 @@ int main(int argc, char ** argv)
 
 						}						
 
-//						cout << p.getFront() -> getCheck() << endl;
+						cout << p.getFront() -> getCheck() << endl;
 
 						
 				
@@ -589,11 +593,22 @@ int main(int argc, char ** argv)
 								as.enqueue(tas.getFront());
 								tas.dequeue();
 						
+							cout << "c" << endl;
+							if (!cur.isEmpty())
+							{
+								c = cur.getFront();					
+							}
+							else
+							{
+								c = 2;
+							}
+	
+
 //							cout << " aisle refreshed " << endl;
 							}
 							else //someone is in the way
 							{
-//								cout << "blocked " << endl;
+								cout << "blocked " << endl;
 
 								curr = cur.getFront();
 								cur.dequeue();
@@ -615,7 +630,8 @@ int main(int argc, char ** argv)
 								as.dequeue();
 								as.enqueue(tas.getFront());
 								tas.dequeue();
-			
+								
+								c = 1;
 							}
 
 						}
@@ -628,18 +644,32 @@ int main(int argc, char ** argv)
 
 							cur.dequeue(); // person's current row # is taken out
 								
-							tmpcurr = tmpcur.getFront();
+						//	tmpcurr = tmpcur.getFront();
 
 							cout << "someone sits " << endl;
+							cout << "t" << endl;
 
 							tmpcur.dequeue();
-
+							cout << "s" << endl;
 							status.dequeue();
-
-							stat = status.getFront();
-				
+							cout << "r" << endl;	
+							if (!status.isEmpty())
+							{
+								stat = status.getFront();
+							}	
 							size --;					
 							
+							cout << "c" << endl;
+							if (!cur.isEmpty())
+							{
+								c = cur.getFront();					
+							}
+							else
+							{
+								c = 2;
+							}
+		
+
 						}
 
 						else 
@@ -648,11 +678,19 @@ int main(int argc, char ** argv)
 							curr = cur.getFront();
 							cur.dequeue();
 							cur.enqueue(curr);
-							tmpcur.enqueue(tmpcur.getFront());
+
+							cout << "cur " << endl;
+
+							tmpcurr = tmpcur.getFront();
 							tmpcur.dequeue();
+							tmpcur.enqueue(tmpcurr);
+
+							cout << " tmpcur" << endl;
 						
 							status.dequeue();
 							status.enqueue(stat);
+							
+							cout << " status " << endl;
 							stat = status.getFront();
 
 							tar.enqueue(ar.getFront()); // tmp takes first in aisle
@@ -663,13 +701,35 @@ int main(int argc, char ** argv)
 							as.dequeue();
 							as.enqueue(tas.getFront());
 							tas.dequeue();						
-							
+	
+							cout << "c" << endl;
+							if (!cur.isEmpty())
+							{
+								c = cur.getFront();					
+							}
+							else
+							{
+							c = 2;
+							}
 						}
 	
 						
 //							doopsec += (seconds - doopsec);
-					
-						tmpcurr = tmpcur.getFront();
+
+/*						cout << "c" << endl;
+						if (!cur.isEmpty())
+						{
+							c = cur.getFront();					
+						}
+						else
+						{
+							c = 2;
+						}
+*/						cout << " d" << endl;
+						if (!tmpcur.isEmpty())
+						{
+							tmpcurr = tmpcur.getFront();
+						}
 						curr = 1;	
 						tmp.makeEmpty();
 					//	stat = status.getFront();	
