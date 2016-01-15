@@ -72,7 +72,7 @@ class Row
 					if (m == 0) //check that it's the correct row
 					{
 						state = ST1;
-						cout << " rows match" << endl;	
+//						cout << " rows match" << endl;	
 					}
 					else
 					{
@@ -90,6 +90,7 @@ class Row
 						}
 						else
 						{
+										
 							state = S;
 							
 						}								
@@ -167,7 +168,7 @@ class Row
 						}
 						else
 						{
-							cout << "sitting" << sec << endl;
+//							cout << "sitting" << sec << endl;
 							return sec;
 						}
 
@@ -184,7 +185,7 @@ class Row
 						}
 						else
 						{					
-							cout << "sitting" << sec << endl;
+//							cout << "sitting" << sec << endl;
 							
 							return sec;
 						}
@@ -268,7 +269,7 @@ class Row
 						}
 						
 					}
-					cout << " blocked " << sec << endl;
+//					cout << " blocked " << sec << endl;
 					return sec;
 
 			}
@@ -285,7 +286,7 @@ int main(int argc, char ** argv)
 	
 	Queue<char> passseats(288);
 
-	int row, print = 0, seconds= 0, doopsec = 0, counter = 0, curr = 1, size = 0;
+	int row, print = 0, seconds= 0, doopsec = 0, counter = 0, counter1block = 0, counter2block = 0, curr = 1, size = 0, plane = 0;
 
 	char seat;
 
@@ -306,6 +307,8 @@ int main(int argc, char ** argv)
 	Queue<int> tar(48);
 
 	Queue<char> tas(48);
+
+	StackAr<int> tmp(1);
 
 	// enqueue only takes in int
 
@@ -389,7 +392,7 @@ int main(int argc, char ** argv)
 					if(!ar.isFull() && !passrows.isEmpty())
 					{
 
-						cout << " aisle isn't full yet" << endl;
+//						cout << " aisle isn't full yet" << endl;
 
 						ar.enqueue(passrows.getFront());
 
@@ -401,7 +404,7 @@ int main(int argc, char ** argv)
 
 						cur.enqueue(curr);
 						
-						cout << " another person enters the aisle" << endl;
+						//cout << " another person enters the aisle" << endl;
 					}
 
 					
@@ -474,8 +477,10 @@ int main(int argc, char ** argv)
 //							cout << p.getFront() -> getCheck() << "  match" << ar.getFront();
 						
 							seconds = p.getFront()->Sit(as.getFront(), 0, seconds); // pointer at front of queue calls its sit function with seat letter as parameter
+							
+							tmp.push(ar.getFront());
 						
-							cout << "sec " << seconds << endl;
+				//			cout << "sec " << seconds << endl;
 						}
 						else
 						{
@@ -485,7 +490,7 @@ int main(int argc, char ** argv)
 
 						}						
 
-
+						
 //						cout << "reset" << endl;
 
 						while (p.getFront() -> getCheck() != 1) // for rest of pointers that should be behind the checked rows
@@ -510,7 +515,7 @@ int main(int argc, char ** argv)
 				
 						if ((seconds-doopsec) == 5) // if the person wasn't in their proper row
 						{
-							cout << "wait" << endl;
+		//					cout << "wait" << endl;
 							
 							doopsec += 5;
 
@@ -539,46 +544,99 @@ int main(int argc, char ** argv)
 						}
 						else
 						{
-							cout << "sit" << endl;
-					
-							doopsec += (seconds - doopsec); // doopsec adds on the time it too for the person to sit
+//							cout << "sit" << endl;
 							
 							ar.dequeue(); // person's row number is tossed out
 
 							as.dequeue(); // person's seat is tossed out
 
 							cur.dequeue(); // person's current row # is taken out
-						
+				
 							size --;					
+							
+							if (!passrows.isEmpty() || !ar.isEmpty()) // if we're not checking the last guy in aisle
+							{
 
-							counter++;
-						}
+								if(tmp.top() <= ar.getFront()) // if the guy sitting belongs to a row closer than the guy behind him or are from the same row
+								{
+									// add on the time it takes to sit
+								
+									if ( (seconds-doopsec) == 15)
+									{
+										counter++;
+									}
+									else if ( (seconds - doopsec) == 25)
+									{
+										counter1block++;
+									}
+									else
+									{
+										counter2block++;
+									}
+								}
+
+							}
+							else
+							{
+								
+								if((seconds-doopsec) == 15)
+								{
+									plane+=15;
+								}
+								else if((seconds-doopsec) == 25)
+								{
+									plane+=25;
+								}
+								else
+								{
+									plane+=35;	
+
+								}
+							}
+
+							doopsec += (seconds - doopsec);
+						}							
 						curr = 1;	
-				/*	// refresh aisle
-						tar.enqueue(ar.getFront()); // tmp takes first in aisle
-						ar.dequeue();	// aisle queue deletes 
-						ar.enqueue(tar.getFront()); // aisle queues adds to back
-						tar.dequeue(); // tmp deletes
-						tas.enqueue(as.getFront()); // does same except with letters
-						as.dequeue();
-						as.enqueue(tas.getFront());
-						tas.dequeue(); */
-					}
-/*					for(int s =0;s < (48-size); s++)
-					{
-						tar.enqueue(ar.getFront());
-						ar.dequeue();
-						ar.enqueue(tar.getFront());
-						tar.dequeue();
-						tas.enqueue(as.getFront());
-						as.dequeue();
-						as.enqueue(tas.getFront());
-						tas.dequeue();
-
-
-					}
+						tmp.makeEmpty();
+					}	
 					
-*/					size = 0;
+					
+					plane += 5;
+					if(counter > 0) // if there was someone who sat down without being blocked
+					{					
+						plane += 15;
+
+						if(counter1block > 0) // if someone else was sitting too but got blocked
+						{
+							plane += 10;
+						}
+						else if(counter2block > 0) // if there were 2 people blocking 
+						{
+							plane += 20;
+						}
+
+					}
+					else // if no one had to sit down without blockage
+					{
+						if(counter1block > 0) // if someone had to sit and got blocked by 1
+						{
+							plane += 25;
+							if(counter2block > 0) // if at same time someone was blocked by 2
+							{
+								plane += 10;
+
+							}
+						}
+						else if(counter2block > 0) // if only people sitting are ones who get blocked by 2
+						{	
+							plane += 35;
+						}
+						
+					}
+					size = 0;
+					counter = 0;
+					counter1block = 0;
+					counter2block = 0;
 
 				} while (!ar.isEmpty());
 
@@ -587,24 +645,17 @@ int main(int argc, char ** argv)
 			}
 			
 
-	/*		cout << "add to print" << endl;
-			cout << seconds << endl;	
-	//		print.enqueue(seconds);			
-			cout << print.getFront();
-			cout << seconds << endl; */
-
-	
 		switch(print)
 		{
-			case 0: cout << "Back to front: " << seconds << endl; break;
-			case 1: cout << "Random: " << seconds << endl; break;
-			case 2: cout << "Outside in: " << seconds << endl; break;
+			case 0: cout << "Back to front: " <<  plane <<  endl; break;
+			case 1: cout << "Random: " << plane << endl; break;
+			case 2: cout << "Outside in: " << plane << endl; break;
 		}
 	
 		print++;
 		seconds = 0;
 		doopsec = 0;
-
+		plane = 0;
 	}
 	/*		cout << " please " << endl;
 
