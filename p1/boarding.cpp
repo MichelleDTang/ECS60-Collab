@@ -278,7 +278,7 @@ class Row
 };
 
 
-int main(int argc, char * argv[])
+int main(int argc, char ** argv)
 {
 
 	Queue<int> passrows(288);
@@ -300,6 +300,8 @@ int main(int argc, char * argv[])
 	Queue<char> as(48);
 
 	Queue<int> cur(48); // holds respective person's current row number
+
+	Queue<int> tcur(48);
 
 	Queue<int> tar(48);
 
@@ -382,10 +384,12 @@ int main(int argc, char * argv[])
 				
 					// add a person to the aisle queue
 					
-//					cout << "2" << endl;
+					//cout << " add next person to the aisle" << endl;					
 
-					if(!cur.isFull())
+					if(!ar.isFull() && !passrows.isEmpty())
 					{
+
+						cout << " aisle isn't full yet" << endl;
 
 						ar.enqueue(passrows.getFront());
 
@@ -394,6 +398,10 @@ int main(int argc, char * argv[])
 						passrows.dequeue();
 				
 						passseats.dequeue();
+
+						cur.enqueue(curr);
+						
+						cout << " another person enters the aisle" << endl;
 					}
 
 					
@@ -416,17 +424,28 @@ int main(int argc, char * argv[])
 
 					for (int loop = 0; loop < size; loop++) // iterate through all the people in the aisle
 					{
-						cout << "5" << endl;
+/*						while(!cur.isEmpty())
+						{
+							cout << "in cur queue" << cur.getFront() << endl;
+							
+							tcur.enqueue(cur.getFront());
+							cur.dequeue();
+						}
 
-						cur.enqueue(curr); // update the row that the newest person in the aisle is in
+						while(!tcur.isEmpty())
+						{
+							cur.enqueue(tcur.getFront());
+							tcur.dequeue();
+
+						}
+*/
 	
-
 						// get the proper pointer for the row a person is at
 
 
-						for (int g = 1; g < cur.getFront(); g++)
+						for (int g = 0; g < cur.getFront(); g++)
 						{
-							cout << "row of pointer " << p.getFront() -> getCheck() << " for " << ar.getFront() << as. getFront() << endl;
+	//						cout << "row of pointer " << p.getFront() -> getCheck() << " for " << ar.getFront() << as.getFront() << endl;
 			
 							tp.enqueue(p.getFront());
 
@@ -452,7 +471,7 @@ int main(int argc, char * argv[])
 */						// takes front guy and checks him through row class
 						if (p.getFront() -> getCheck() == ar.getFront())
 						{
-							cout << p.getFront() -> getCheck() << " " << ar.getFront();
+//							cout << p.getFront() -> getCheck() << "  match" << ar.getFront();
 						
 							seconds = p.getFront()->Sit(as.getFront(), 0, seconds); // pointer at front of queue calls its sit function with seat letter as parameter
 						
@@ -462,12 +481,12 @@ int main(int argc, char * argv[])
 						{
 							seconds = p.getFront()-> Sit(as.getFront(), 1, seconds);
 
-							cout << p.getFront() -> getCheck() << " " << ar.getFront();
+//							cout << p.getFront() -> getCheck() << "<- point's row  move along  person's row ->" << ar.getFront() << endl;
 
 						}						
 
 
-						cout << "reset" << endl;
+//						cout << "reset" << endl;
 
 						while (p.getFront() -> getCheck() != 1) // for rest of pointers that should be behind the checked rows
 						{
@@ -483,7 +502,7 @@ int main(int argc, char * argv[])
 
 						}						
 
-						cout << p.getFront() -> getCheck() << endl;
+//						cout << p.getFront() -> getCheck() << endl;
 
 						
 						// if seconds - doopsec = 5, that person isn't in the right row so move him up
@@ -502,6 +521,21 @@ int main(int argc, char * argv[])
 							cur.dequeue(); // get rid of old row value
 			
 							cur.enqueue(curr); // add the new row value for person to back to the current status queue
+
+//							cout << "old cur removed " << cur.getFront() << endl;
+
+							// refresh aisle
+							tar.enqueue(ar.getFront()); // tmp takes first in aisle
+							ar.dequeue();	// aisle queue deletes 
+							ar.enqueue(tar.getFront()); // aisle queues adds to back
+							tar.dequeue(); // tmp deletes
+							tas.enqueue(as.getFront()); // does same except with letters
+							as.dequeue();
+							as.enqueue(tas.getFront());
+							tas.dequeue();
+						
+//							cout << " aisle refreshed " << endl;
+
 						}
 						else
 						{
@@ -515,20 +549,22 @@ int main(int argc, char * argv[])
 
 							cur.dequeue(); // person's current row # is taken out
 						
+							size --;					
+
 							counter++;
 						}
 						curr = 1;	
-					// refresh aisle
-						tar.enqueue(ar.getFront());
-						ar.dequeue();
-						ar.enqueue(tar.getFront());
-						tar.dequeue();
-						tas.enqueue(as.getFront());
+				/*	// refresh aisle
+						tar.enqueue(ar.getFront()); // tmp takes first in aisle
+						ar.dequeue();	// aisle queue deletes 
+						ar.enqueue(tar.getFront()); // aisle queues adds to back
+						tar.dequeue(); // tmp deletes
+						tas.enqueue(as.getFront()); // does same except with letters
 						as.dequeue();
 						as.enqueue(tas.getFront());
-						tas.dequeue();
+						tas.dequeue(); */
 					}
-					for(int s =0;s < (48-size); s++)
+/*					for(int s =0;s < (48-size); s++)
 					{
 						tar.enqueue(ar.getFront());
 						ar.dequeue();
@@ -542,7 +578,7 @@ int main(int argc, char * argv[])
 
 					}
 					
-					size = 0;
+*/					size = 0;
 
 				} while (!ar.isEmpty());
 
