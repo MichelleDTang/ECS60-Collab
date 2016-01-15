@@ -53,106 +53,120 @@ class Row
 
 	}	
 
-	int Sit (char letter, int m, int seconds)
+	int  Sit (char letter, int m)
 	{
 
-			sec = seconds;
-
-//			cout << row << endl;
-
-//			cout << "checkr" << checkr << endl;
+//			sec = seconds;
 
 			State state = W;
 		
 			switch(state)
 			{
-				case W : sec += 5; 
 
+				case W : sec += 5; 
+			
+/*					if (!ABC.isEmpty())
+					{
+						cout << ABC.top() << endl;
+									
+					}
 					
-					if (m == 0) //check that it's the correct row
+					if (!DEF.isEmpty())
+					{
+						cout << DEF.top() << endl;
+					}
+
+*/					if (m == 0) //check that it's the correct row
 					{
 						state = ST1;
 //						cout << " rows match" << endl;	
+						return 2;
 					}
 					else
 					{
-						return sec;
+						return 0;
 					}
-				case ST1 : sec += 5; state = ST2; 
+				case ST1 : sec += 5; state = ST2; return 2;
 				case ST2 : sec += 5; 
 					if (letter == 'A' ) // if the stack needs to be popped
 					{
-						if (!ABC.isEmpty())
+						if (!ABC.isEmpty()) // B or C is sitting down in that row
 						{						
 
 							state = O;
-							
+							return 2;	
 						}
-						else
+						else // no one blocking 
 						{
 										
 							state = S;
-							
+							return 2;
 						}								
 
 					}
 					else if (letter == 'F')
 					{
-						if (!DEF.isEmpty())
+						if (!DEF.isEmpty()) // D or E is sitting down
 						{
 							state = O;
-							
+							return 2;	
 						}
-						else
+						else // no one blocking
 						{
 							state = S;
-							
+							return 2;
 						}
 	
 					}
-					else if (letter == 'B')
+					else if (letter == 'B') 
 					{
 
-						if (!ABC.isEmpty())
+						if (!ABC.isEmpty()) // A or C
 						{
-							if (ABC.top() == 'C')
+							if (ABC.top() == 'C') // stack must be popped
 							{
 								state = O;
-								
+								return 2;
 							}
-							else
+							else // stack doesn't need to be popped
 							{
 								state = S;
-								
+								return 2;
 							}
 						}
-						else
+						else // no one blocking
 						{
 							state = S; 
-							
+							return 2;
 						}
 					}
 					else if (letter == 'E')
 					{
 
-						if (!DEF.isEmpty())
+						if (!DEF.isEmpty()) // D or F 
 						{
-							if (DEF.top() == 'D')
+							if (DEF.top() == 'D') // pop stack
 							{
 								state = O;
-								
+								return 2;								
 							}
+							else // stack doesn't need popping
+							{
+								state = S;
+								return 2;
+							}
+							
 						}
-						else
+						else // no one blocking
 						{
 							state = S;
-							
+							return 2;
 						}
 					}
 					else //C or D
 					{
 						state = S;
-						
+						return 2;
 					}
 
 				case S :  
@@ -161,15 +175,15 @@ class Row
 					{
 						ABC.push(letter);
 						sec += 5;
-						if (!temp.isEmpty())
+						if (!temp.isEmpty()) // if someone had to be popped
 						{
 							state = I;
-							
+							return 2;
 						}
 						else
 						{
 //							cout << "sitting" << sec << endl;
-							return sec;
+							return 1;
 						}
 
 					}	
@@ -180,17 +194,19 @@ class Row
 						if (!temp.isEmpty())
 						{
 							state = I;
-							
+							return 2;
 
 						}
 						else
 						{					
 //							cout << "sitting" << sec << endl;
 							
-							return sec;
+							return 1;
 						}
 					}
 				case O : 
+					
+
 					if (letter == 'A' || letter == 'B')
 					{
 						if (letter == 'A')
@@ -198,55 +214,61 @@ class Row
 							if (ABC.top() == 'C')
 							{
 
-								temp.push(ABC.topAndPop());
+								temp.push(ABC.top()); // move out C
+								ABC.pop();
 								sec += 5;
-								if (!ABC.isEmpty())
+								if (!ABC.isEmpty()) // if B was also in
 								{
-									temp.push(ABC.topAndPop());
+									temp.push(ABC.top()); // move out A
+									ABC.pop();
 									sec += 5;
 									state = S;
-									
+									return 2;	
 								}
 								else
 								{
-									state = S;
-									
+									state = S; // if only C, go to sit
+									return 2;
 								}
 							}
 						}
 						else
 						{
-							temp.push(ABC.topAndPop());
+							temp.push(ABC.top()); // if letter B
+							ABC.pop(); // pop off top which would be C
 							sec += 5;
 							state = S;
-							
+							return 2;
 						}
 					}
-					else
+					else // E or F
 					{
 						if (letter == 'F')
 						{						
 							if (ABC.top() == 'D')
 							{
-								temp.push(DEF.topAndPop());
+								temp.push(DEF.top());
+								DEF.pop();
 								sec += 5;
 								if (!DEF.isEmpty())
 								{
-									temp.push(DEF.topAndPop());
+									temp.push(DEF.top());
+									DEF.pop();
 									sec += 5;
 									state = S;
-									
+									return 2;	
 								}
 								else
 								{
 									state = S;
-									
+									return 2;			
 								}
 							}
 						}
 						else
 						{
-							temp.push(DEF.topAndPop());
+							temp.push(DEF.top());
+							DEF.pop();
 							sec += 5;
 							
 						}
@@ -259,18 +281,20 @@ class Row
 					{
 						if (letter == 'A'|| letter == 'B' || letter == 'C')
 						{
-							ABC.push(temp.topAndPop());
+							ABC.push(temp.top());
+							temp.pop();
 							sec += 5;
 						}
 						else
 						{
-							DEF.push(temp.topAndPop());
+							DEF.push(temp.top());
+							temp.pop();
 							sec += 5;
 						}
 						
 					}
 //					cout << " blocked " << sec << endl;
-					return sec;
+					return 1;
 
 			}
 		return 0;
@@ -286,7 +310,7 @@ int main(int argc, char ** argv)
 	
 	Queue<char> passseats(288);
 
-	int row, print = 0, seconds= 0, doopsec = 0, counter = 0, counter1block = 0, counter2block = 0, curr = 1, size = 0, plane = 0;
+	int row, print = 0, stat = 0, curr = 1, size = 0, plane = 0;
 
 	char seat;
 
@@ -317,10 +341,6 @@ int main(int argc, char ** argv)
 		Row *r = new Row;
 
 		r -> setCheck(pt);
-
-//		cout << pt << endl;
-
-//		cout << r -> getCheck() << endl;
 
 		p.enqueue(r);
 	}
@@ -354,12 +374,6 @@ int main(int argc, char ** argv)
 	}		
 */
 
-//	Row *r1, *r2, *r3, *r4, *r5, *r6, *r7, *r8, *r9, *r10, *r11, *r12, *r13, *r14, *r15, *r16, *r17, *r18, *r19, *r20, *r21, *r22, *r23, *r24, *r25, *r26, *r27, *r28, *r29, *r30, 
-//	*r31, *r32, *r33, *r34, *r35, *r36, *r37, *r38, *r39, *r40,*r41, *r42, *r43, *r44, *r45, *r46, *r47, *r48;
-
-
-
-	
 
 	while (print != 3) //while the file hasn't ended
 	{
@@ -476,7 +490,7 @@ int main(int argc, char ** argv)
 						{
 //							cout << p.getFront() -> getCheck() << "  match" << ar.getFront();
 						
-							seconds = p.getFront()->Sit(as.getFront(), 0, seconds); // pointer at front of queue calls its sit function with seat letter as parameter
+							stat = p.getFront()->Sit(as.getFront(), 0); // pointer at front of queue calls its sit function with seat letter as parameter
 							
 							tmp.push(ar.getFront());
 						
@@ -484,7 +498,7 @@ int main(int argc, char ** argv)
 						}
 						else
 						{
-							seconds = p.getFront()-> Sit(as.getFront(), 1, seconds);
+							stat = p.getFront()-> Sit(as.getFront(), 1);
 
 //							cout << p.getFront() -> getCheck() << "<- point's row  move along  person's row ->" << ar.getFront() << endl;
 
@@ -495,8 +509,7 @@ int main(int argc, char ** argv)
 
 						while (p.getFront() -> getCheck() != 1) // for rest of pointers that should be behind the checked rows
 						{
-							
-
+						
 							tp.enqueue(p.getFront()); // move front of point to temp point
 														
 							p.dequeue();
@@ -512,13 +525,13 @@ int main(int argc, char ** argv)
 						
 						// if seconds - doopsec = 5, that person isn't in the right row so move him up
 						// if != 5, he got seated so take him out and throw away
-				
-						if ((seconds-doopsec) == 5) // if the person wasn't in their proper row
-						{
-		//					cout << "wait" << endl;
-							
-							doopsec += 5;
 
+
+				
+						if (stat == 0) // if the person wasn't in their proper row
+						{
+					//		cout << "wait" << endl;
+							
 							curr = cur.getFront(); // curr is the number corresponding to the row the person should be in
 
 							curr ++; // add 1 meaning person goes onto next row
@@ -542,9 +555,13 @@ int main(int argc, char ** argv)
 //							cout << " aisle refreshed " << endl;
 
 						}
-						else
+						else if ( stat == 2)
 						{
-//							cout << "sit" << endl;
+							
+							
+						}
+						else 
+						{
 							
 							ar.dequeue(); // person's row number is tossed out
 
@@ -554,22 +571,24 @@ int main(int argc, char ** argv)
 				
 							size --;					
 							
-							if (!passrows.isEmpty() || !ar.isEmpty()) // if we're not checking the last guy in aisle
+/*							if (!passrows.isEmpty() || !ar.isEmpty()) // if we're not checking the last guy in aisle
 							{
 
 								if(tmp.top() <= ar.getFront()) // if the guy sitting belongs to a row closer than the guy behind him or are from the same row
 								{
 									// add on the time it takes to sit
-								
-									if ( (seconds-doopsec) == 15)
+												
+									//cout << "someone sitting" << endl;
+
+									if ( (seconds-doopsec) == 20)
 									{
 										counter++;
 									}
-									else if ( (seconds - doopsec) == 25)
+									else if ( (seconds - doopsec) == 30)
 									{
 										counter1block++;
 									}
-									else
+									else if ((seconds-doopsec) == 40)
 									{
 										counter2block++;
 									}
@@ -593,8 +612,8 @@ int main(int argc, char ** argv)
 
 								}
 							}
-
-							doopsec += (seconds - doopsec);
+*/
+//							doopsec += (seconds - doopsec);
 						}							
 						curr = 1;	
 						tmp.makeEmpty();
@@ -602,7 +621,7 @@ int main(int argc, char ** argv)
 					
 					
 					plane += 5;
-					if(counter > 0) // if there was someone who sat down without being blocked
+/*					if(counter > 0) // if there was someone who sat down without being blocked
 					{					
 						plane += 15;
 
@@ -633,13 +652,45 @@ int main(int argc, char ** argv)
 						}
 						
 					}
-					size = 0;
-					counter = 0;
-					counter1block = 0;
-					counter2block = 0;
+*/					size = 0;
+	//				counter = 0;
+	//				counter1block = 0;
+	//				counter2block = 0;
 
 				} while (!ar.isEmpty());
 
+	//			plane += 5;
+/*				if(counter > 0) // if there was someone who sat down without being blocked
+				{					
+					plane += 15;
+					if(counter1block > 0) // if someone else was sitting too but got blocked
+					{
+						plane += 10;
+					}
+					else if(counter2block > 0) // if there were 2 people blocking 
+					{
+						plane += 20;
+					}
+
+				}
+				else // if no one had to sit down without blockage
+				{
+					if(counter1block > 0) // if someone had to sit and got blocked by 1
+					{
+						plane += 25;
+						if(counter2block > 0) // if at same time someone was blocked by 2
+						{
+							plane += 10;
+
+						}
+					}
+					else if(counter2block > 0) // if only people sitting are ones who get blocked by 2
+					{	
+						plane += 35;
+					}
+						
+				}
+*/	
 				// update the pointer queue for each passenger that's in the aisle?
 
 			}
@@ -653,18 +704,10 @@ int main(int argc, char ** argv)
 		}
 	
 		print++;
-		seconds = 0;
-		doopsec = 0;
+//		seconds = 0;
+	//	doopsec = 0;
 		plane = 0;
-	}
-	/*		cout << " please " << endl;
+		}
 
-			cout << "Back to front: " << print.getFront() << endl;
-	//		print.dequeue();
-			cout << "Random: " << print.getFront() << endl;
-	//		print.dequeue();
-			cout << "Outside in: " << print.getFront() << endl;
-	*/
-	return 0;
 }
 
