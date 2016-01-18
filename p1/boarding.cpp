@@ -17,7 +17,9 @@ class Row
 
 	StackAr<char> DEF;
 	
-	StackAr<char> temp;
+	StackAr<char> tempABC;
+
+	StackAr<char> tempDEF;
 
 	Row()
 	{
@@ -35,7 +37,9 @@ class Row
 
 		StackAr<char> DEF(3);
 		
-		StackAr<char> temp(3);
+		StackAr<char> tempABC(3);
+
+		StackAr<char> tempDEF(3);
 	}
 
 	int setnewprow(int r)
@@ -99,15 +103,17 @@ class Row
 		switch(state)
 		{
 			case 0: break;
-			case 1: cout << "waiting" << endl;
+			case 1: //cout << "waiting" << endl;
 				if(match == 0)
 				{
 					state = 2;
 					break;
 				}
 				break;
-			case 2: cout << " store 1 " << endl;state = 3; break;
-			case 3: cout << "store 2" << endl;
+			case 2: //cout << " store 1 " << endl;
+				state = 3; 
+				break;
+			case 3: //cout << "store 2" << endl;
 				if(letter == 'A')
 				{
 					if(!ABC.isEmpty())
@@ -155,7 +161,11 @@ class Row
 				{
 					if(!DEF.isEmpty())
 					{
-						if(DEF.top() == 'D') state = 5; break;
+						if(DEF.top() == 'D') 
+						{	
+							state = 5; 
+							break;
+						}
 					}
 
 				}
@@ -164,11 +174,12 @@ class Row
 					state = 4; break;
 				}
 			
-			case 4: cout << "sitting " << endl;
+			case 4: //cout << "sitting " << endl;
 				if( letter == 'A' || letter == 'B' || letter == 'C')
 				{
+		//			cout << "? " << endl;
 					ABC.push(letter);
-					if(!temp.isEmpty())
+					if(!tempABC.isEmpty())
 					{
 						 state = 6; break;
 					}
@@ -179,44 +190,46 @@ class Row
 				} 
 				else
 				{
+				//	cout << " ! " << endl;
 					DEF.push(letter);
-					if(!temp.isEmpty()) 
+					if(!tempDEF.isEmpty()) 
 					{
 						state = 6;
 						break;
 					}
 					else
 					{
+						
 						state = 7;
 						break;
 					}
 				}
 				
-			case 5: cout << "out " << endl; 
+			case 5: //cout << "out " << endl; 
 				if(letter == 'A' || letter == 'B')
 				{
 					if(letter == 'A')
 					{
-						if(ABC.top() == 'C' || ABC.top() == 'B')
-						{
-							temp.push(ABC.topAndPop());								 
+					//	if(ABC.top() == 'C' || ABC.top() == 'B')
+					//	{
 							if(!ABC.isEmpty())
 							{
-								state = 6;
+								tempABC.push(ABC.topAndPop());
+								state = 5;
 								break;
 							}
 							else
 							{
-								state = 5;
+								state = 4;
 								break;
 							}
-						}
+					//	}
 					}
 
 				
 					else
 					{
-						temp.push(ABC.topAndPop());
+						tempABC.push(ABC.topAndPop());
 						state = 4;
 						break;
 					}
@@ -225,52 +238,65 @@ class Row
 				{
 					if(letter == 'F')
 					{
-						if(DEF.top() == 'D' || ABC.top() == 'E')
-						{
-							temp.push(DEF.topAndPop());								 
+					//	if(DEF.top() == 'D' || ABC.top() == 'E')
+					//	{
 							if(!DEF.isEmpty())
 							{
-								state = 6;
+//								cout << " under " << endl;
+								tempDEF.push(DEF.topAndPop());
+								state = 5;
 								break;
+								
 							}
 							else
 							{
-								state = 5;
+								state = 4;
 								break;
 							}
-						}
+					//	}
 					}
 
 				
 					else
 					{
-						temp.push(DEF.topAndPop());
+						tempDEF.push(DEF.topAndPop());
 						state = 4;
 						break;
 	
 					}
 				}
 			case 6:	
-				cout << "In" << endl;
-				while(!temp.isEmpty())
-				{	
+			//	cout << "In" << endl;
+			
+					
+			
 					if(letter =='A' || letter == 'B' || letter == 'C')
 					{
-						ABC.push(temp.topAndPop());
-
+						while(!tempABC.isEmpty())
+						{
+//							cout << tempABC.top() << endl;
+							ABC.push(tempABC.topAndPop());
+//							cout << "add ABC" << endl;
+						}
 					}
 					else
 					{
-						DEF.push(temp.topAndPop());
-								
+						while(!tempDEF.isEmpty())
+						{
+//							cout << "temp " << tempDEF.top() << endl;
+//							cout << "DEF " << DEF.top() << endl;
+						DEF.push(tempDEF.topAndPop());
+//							cout << "add DEF" << endl;			
 					}
-				
-				}	
-				state = 7;
-				break;
-		}	
-		return state;			
-	}
+				}
+			
+		//		tempABC.makeEmpty();
+		//		tempDEF.makeEmpty();
+			state = 7;
+			break;
+	}	
+	return state;			
+}
 
 
 
@@ -279,24 +305,24 @@ class Row
 
 int main(int argc, char **argv)
 {
-	Row * r;
-	int curr = 1, stat =0, people =0, print = 0, row, plane =0;
+Row * r;
+int curr = 1, stat =0, people =0, print = 0, row, plane =0, count = 0;
 
-	char seat;
+char seat;
 
-	Queue<int> passN(288);
+Queue<int> passN(288);
 
-	Queue<char> passL(288);
+Queue<char> passL(288);
 
-	Queue<int> track(48);
+Queue<int> track(48);
 
-	Queue<Row *> p(48);
-			
-	StackAr<int> In(48);
+Queue<Row *> p(48);
+		
+Queue<int> In(48);
 
-	ifstream inf(argv[1]);
+ifstream inf(argv[1]);
 
-	for (int pt =1; pt <=48 ; pt++)
+	for (int pt =1; pt <= 48 ; pt++)
 	{
 		Row *r = new Row;
 
@@ -306,6 +332,7 @@ int main(int argc, char **argv)
 
 		p.getFront() -> setStatus(0);
 	}
+	
 
 	while (print != 3)
 	{
@@ -314,12 +341,51 @@ int main(int argc, char **argv)
 			inf >> row >> seat;
 			passN.enqueue(row);
 			passL.enqueue(seat);
+			cout << q << endl;
 		}
-		cout << " the line was read" << endl;
-		do 
+
+		while(!passN.isEmpty())		
 		{
-			if( p.getFront() -> getStatus() == 0)
+	
+
+/*		while(p.getFront() -> getCheck() != 1)
+		{
+			r = p.getFront();
+			p.dequeue();
+			p.enqueue(r);
+		}		
+	
+		for(int m = 0; m < 48 ; m++)
+		{
+			if(p.getFront() -> getStatus() != 0)
 			{
+				In.enqueue(p.getFront()-> getCheck()); 
+				r = p.getFront();
+				p.dequeue();
+				p.enqueue(r);			
+
+			}
+			else 
+			{
+				r = p.getFront();
+				p.dequeue();
+				p.enqueue(r);
+			}
+		}
+*/	
+			while(p.getFront() -> getCheck() != 1)
+			{
+				r = p.getFront();
+				p.dequeue();
+				p.enqueue(r);
+			}		
+	
+
+//		cout << "check "<< endl;
+		
+			if( p.getFront() -> getStatus() == 0 )
+			{
+			
 				p.getFront() -> setnewprow(passN.getFront());
 				passN.dequeue();
 				p.getFront() -> setnewpseat(passL.getFront());
@@ -328,21 +394,57 @@ int main(int argc, char **argv)
 				p.getFront() -> setStatus(1);			
 				p.getFront() -> setCurrent(1);
 				cout << "someone into aisle" << endl;		
-				track.enqueue(1);
+				In.enqueue(1);
+				curr = 1;
 			}
+/*
+			while(p.getFront() -> getCheck() != 1)
+			{
+				r = p.getFront();
+				p.dequeue();
+				p.enqueue(r);
+			}		
+	
+			for(int m = 0; m < 48 ; m++)
+			{
+				if(p.getFront() -> getStatus() != 0)
+				{
+					In.enqueue(p.getFront()-> getCheck()); 
+					r = p.getFront();
+					p.dequeue();
+					p.enqueue(r);			
+
+				}
+				else 
+				{
+					r = p.getFront();
+					p.dequeue();
+					p.enqueue(r);
+				}
+
+			}
+	
+*/
 		// loop for how ever many aisles ahead of row 1 this person is
 			
 
 			for (int v = 1; v <= people; v++)
 			{
-				curr = track.getFront();
+				
 			//	cout << curr << endl;
 				//get the row the current person is in
 				if(In.isEmpty())
 				{
-					
+					curr = 1;	
 				}
-				for(int g = 1; g < In.topAndPop(); g++)
+				else
+				{
+					curr = In.getFront();
+					In.dequeue();
+				}
+				cout << " curr " << curr << endl;
+
+				for(int g = 1; g < curr; g++)
 				{
 					r = p.getFront();
 					p.dequeue();
@@ -350,9 +452,9 @@ int main(int argc, char **argv)
 			
 				}
 											
-				cout << "who are you" << p.getFront() -> getnewprow() << p.getFront() -> getnewpseat() << endl;
-				cout << "current row " << p.getFront() -> getCheck() << endl;
-				cout << " current person's row number " << p.getFront() -> getnewprow() << endl;
+				cout << "who are you " << p.getFront() -> getnewprow() << p.getFront() -> getnewpseat() << endl;
+//				cout << "current row " << p.getFront() -> getCheck() << endl;
+//				cout << " current person's row number " << p.getFront() -> getnewprow() << endl;
 				if (p.getFront() -> getCheck() == p.getFront() -> getnewprow())
 				{
 					cout << "a match! " << endl;
@@ -363,7 +465,10 @@ int main(int argc, char **argv)
 						p.getFront() -> setnewprow(0);
 						p.getFront() -> setnewpseat(' ');
 						people --;
-						cout << "someone left" << endl;
+						count ++;
+						plane -= 5;									
+
+			//			cout << "someone left" << endl;
 						
 					}	
 					else
@@ -374,39 +479,84 @@ int main(int argc, char **argv)
 				}
 				else
 				{
-					cout << "no match " << endl;
+//					cout << "no match " << endl;
 					r = p.getFront();
 					p.dequeue();
 					p.enqueue(r);
 					stat = p.getFront() -> getStatus();
 					if(stat == 0)
 					{
-						cout << "moved " << endl;
+//						cout << "moved " << endl;
 						p.getFront() -> setStatus(1);
 						p.getFront() -> setnewprow(r -> getnewprow());
 						p.getFront() -> setnewpseat(r -> getnewpseat());
 						r -> setStatus(0);
 						r -> setnewprow(0);
 						r -> setnewpseat(' '); 
-						track.dequeue();
-						track.enqueue(curr + 1);
+						
 					}
 					else
 					{
+					
+						
 						//nothing changes?
 					}
+			
 				}
-		
-			}
-			for(int m = 1; m <=48 ; m++)
-			{
-				if(p.getFront() -> getStatus() != 0)
+				while(p.getFront() -> getCheck() != 1)
 				{
-					In.push(p.getFront()-> getCheck()); 
 					r = p.getFront();
 					p.dequeue();
 					p.enqueue(r);
+				}		
+/*	
+				for(int m = 1; m <=48 ; m++)
+				{
+					if(p.getFront() -> getStatus() != 0)
+					{
+						In.enqueue(p.getFront()-> getCheck()); 
+						r = p.getFront();
+						p.dequeue();
+						p.enqueue(r);			
+	
+					}
+					else 
+					{
+						r = p.getFront();
+						p.dequeue();
+						p.enqueue(r);
+					}
 
+				}
+*/	
+
+				
+
+			}
+	
+			while(p.getFront() -> getCheck() != 1)
+			{
+				r = p.getFront();
+				p.dequeue();
+				p.enqueue(r);
+			}		
+
+			for(int m = 1; m <= 48 ; m++)
+			{
+				if(p.getFront() -> getStatus() != 0)
+				{
+					In.enqueue(p.getFront()-> getCheck()); 
+					r = p.getFront();
+					p.dequeue();
+					p.enqueue(r);
+					
+
+				}
+				else 
+				{
+					r = p.getFront();
+					p.dequeue();
+					p.enqueue(r);
 				}
 
 			}
@@ -420,12 +570,15 @@ int main(int argc, char **argv)
 				p.dequeue();
 				p.enqueue(r);
 			}		
-			if(passN.isEmpty() && people == 0)
+			if(passN.isEmpty() )
 			{
+			//	cout << "break " << endl;
 				people = -1;
+				break;
 			}	
-
-		} while (people != -1);	
+		
+			
+		} 	
 /*		curr = p.getFront() -> getCheck();
 
 		//refresh
